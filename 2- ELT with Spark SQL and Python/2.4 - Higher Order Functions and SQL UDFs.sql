@@ -15,7 +15,6 @@ SELECT * FROM orders
 
 -- COMMAND ----------
 
--- filter for sales of only king sized items
 SELECT
   order_id,
   books,
