@@ -26,8 +26,8 @@
 
 CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
 COMMENT "The raw books orders, ingested from orders-raw"
-AS SELECT * FROM cloud_files("${datasets_path}/orders-raw", "parquet",
-                              map("schema", "order_id STRING, order_timestamp LONG, customer_id STRING, quantity LONG"))
+AS SELECT * FROM cloud_files("${datasets_path}/orders-json-raw", "json",
+                             map("cloudFiles.inferColumnTypes", "true"))
 
 -- COMMAND ----------
 
@@ -58,7 +58,7 @@ CREATE OR REFRESH STREAMING LIVE TABLE orders_cleaned (
 COMMENT "The cleaned books orders with valid order_id"
 AS
   SELECT order_id, quantity, o.customer_id, c.profile:first_name as f_name, c.profile:last_name as l_name,
-         cast(from_unixtime(order_timestamp, 'yyyy-MM-dd HH:mm:ss') AS timestamp) order_timestamp,
+         cast(from_unixtime(order_timestamp, 'yyyy-MM-dd HH:mm:ss') AS timestamp) order_timestamp, o.books,
          c.profile:address:country as country
   FROM STREAM(LIVE.orders_raw) o
   LEFT JOIN LIVE.customers c
