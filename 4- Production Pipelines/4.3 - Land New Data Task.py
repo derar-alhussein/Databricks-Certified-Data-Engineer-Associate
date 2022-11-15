@@ -3,4 +3,4 @@
 
 # COMMAND ----------
 
-load_new_data()
+load_new_json_data()
