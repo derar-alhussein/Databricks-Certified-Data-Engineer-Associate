@@ -19,7 +19,7 @@ def download_dataset(source, target):
         target_path = f"{target}/{f.name}"
         if not path_exists(target_path):
             print(f"Copying {f.name} ...")
-            dbutils.fs.cp(source, target, True)
+            dbutils.fs.cp(source_path, target_path, True)
 
 # COMMAND ----------
 
