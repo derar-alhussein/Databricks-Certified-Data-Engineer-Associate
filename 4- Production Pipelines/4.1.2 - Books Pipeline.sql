@@ -9,8 +9,7 @@
 
 CREATE OR REFRESH STREAMING LIVE TABLE books_bronze
 COMMENT "The raw books data, ingested from CDC feed"
-AS SELECT input_file_name() source_file, *
-FROM cloud_files("${datasets_path}/books-cdc", "json")
+AS SELECT * FROM cloud_files("${datasets_path}/books-cdc", "json")
 
 -- COMMAND ----------
 
@@ -29,7 +28,7 @@ APPLY CHANGES INTO LIVE.books_silver
   KEYS (book_id)
   APPLY AS DELETE WHEN row_status = "DELETE"
   SEQUENCE BY row_time
-  COLUMNS * EXCEPT (row_status, row_time, source_file, _rescued_data)
+  COLUMNS * EXCEPT (row_status, row_time)
 
 -- COMMAND ----------
 
