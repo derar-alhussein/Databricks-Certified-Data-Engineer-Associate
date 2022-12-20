@@ -74,11 +74,12 @@ def author_counts_state():
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC CREATE LIVE VIEW books_sales
-# MAGIC   AS SELECT b.title, o.quantity
-# MAGIC     FROM (
-# MAGIC       SELECT *, explode(books) AS book 
-# MAGIC       FROM LIVE.orders_cleaned) o
-# MAGIC     INNER JOIN LIVE.books_silver b
-# MAGIC     ON o.book.book_id = b.book_id;
+@dlt.view
+def books_sales():
+    return (
+        dlt.read("orders_cleaned").withColumn("book", F.explode("books")).alias("o")
+            .join(
+                dlt.read("books_silver").alias("b"), 
+                F.col("o.book.book_id") == F.col("b.book_id")
+            )
+    )
