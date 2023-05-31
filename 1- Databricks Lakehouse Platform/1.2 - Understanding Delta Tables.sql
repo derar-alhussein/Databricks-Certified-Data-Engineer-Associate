@@ -15,7 +15,7 @@ VALUES
 
 -- COMMAND ----------
 
-SELECT * FROM employees
+SELECT * FROM employees where name like 'A%'
 
 -- COMMAND ----------
 
