@@ -1,6 +1,6 @@
 -- Databricks notebook source
 -- MAGIC %md-sandbox
--- MAGIC 
+-- MAGIC
 -- MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
 -- MAGIC   <img src="https://dalhussein.blob.core.windows.net/course-resources/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 -- MAGIC </div>
@@ -135,36 +135,3 @@ SELECT * FROM (
 );
 
 SELECT * FROM transactions
-
--- COMMAND ----------
-
-SELECT
-  order_id,
-  books,
-  FILTER (books, i -> i.quantity >= 2) AS many_books
-FROM orders
-
--- COMMAND ----------
-
-SELECT order_id, many_books
-FROM (
-  SELECT
-    order_id,
-    FILTER (books, i -> i.quantity >= 2) AS many_books
-  FROM orders)
-WHERE size(many_books) > 0;
-
--- COMMAND ----------
-
-SELECT
-  order_id,
-  books,
-  TRANSFORM (
-    books,
-    k -> CAST(k.subtotal * 0.8 AS INT)
-  ) AS subtotal_after_discount
-FROM orders;
-
--- COMMAND ----------
-
-
