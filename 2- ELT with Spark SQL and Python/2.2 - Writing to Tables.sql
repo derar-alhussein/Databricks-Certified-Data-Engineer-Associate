@@ -20,6 +20,11 @@ SELECT * FROM orders
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Overwriting Tables
+
+-- COMMAND ----------
+
 CREATE OR REPLACE TABLE orders AS
 SELECT * FROM parquet.`${dataset.bookstore}/orders`
 
@@ -43,12 +48,22 @@ SELECT *, current_timestamp() FROM parquet.`${dataset.bookstore}/orders`
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Appending Data
+
+-- COMMAND ----------
+
 INSERT INTO orders
 SELECT * FROM parquet.`${dataset.bookstore}/orders-new`
 
 -- COMMAND ----------
 
 SELECT count(*) FROM orders
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Merging Data
 
 -- COMMAND ----------
 

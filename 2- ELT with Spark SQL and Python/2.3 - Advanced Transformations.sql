@@ -11,6 +11,12 @@
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Parsing JSON Data
+
+-- COMMAND ----------
+
 SELECT * FROM customers
 
 -- COMMAND ----------
@@ -65,8 +71,18 @@ FROM orders
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Explode Function
+
+-- COMMAND ----------
+
 SELECT order_id, customer_id, explode(books) AS book 
 FROM orders
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Collecting Rows
 
 -- COMMAND ----------
 
@@ -78,11 +94,23 @@ GROUP BY customer_id
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ##Flatten Arrays
+
+-- COMMAND ----------
+
 SELECT customer_id,
   collect_set(books.book_id) As before_flatten,
   array_distinct(flatten(collect_set(books.book_id))) AS after_flatten
 FROM orders
 GROUP BY customer_id
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ##Join Operations
 
 -- COMMAND ----------
 
@@ -95,6 +123,11 @@ INNER JOIN books b
 ON o.book.book_id = b.book_id;
 
 SELECT * FROM orders_enriched
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Set Operations
 
 -- COMMAND ----------
 
@@ -116,6 +149,11 @@ SELECT * FROM orders_updates
 SELECT * FROM orders 
 MINUS 
 SELECT * FROM orders_updates 
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Reshaping Data with Pivot
 
 -- COMMAND ----------
 

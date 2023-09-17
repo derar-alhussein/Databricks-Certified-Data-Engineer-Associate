@@ -1,6 +1,24 @@
 -- Databricks notebook source
+-- MAGIC %md
+-- MAGIC ## Creating Delta Lake Tables
+
+-- COMMAND ----------
+
 CREATE TABLE employees
   (id INT, name STRING, salary DOUBLE);
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Catalog Explorer
+-- MAGIC
+-- MAGIC Check the created **employees** table in the **Catalog** explorer.
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Inserting Data
 
 -- COMMAND ----------
 
@@ -33,11 +51,26 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Exploring Table Metadata
+
+-- COMMAND ----------
+
 DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Exploring Table Directory
+
+-- COMMAND ----------
+
 -- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Updating Table
 
 -- COMMAND ----------
 
@@ -60,6 +93,11 @@ DESCRIBE DETAIL employees
 -- COMMAND ----------
 
 SELECT * FROM employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Exploring Table History
 
 -- COMMAND ----------
 

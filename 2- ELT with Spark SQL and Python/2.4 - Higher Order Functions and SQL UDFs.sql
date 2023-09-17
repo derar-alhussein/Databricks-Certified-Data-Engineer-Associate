@@ -15,6 +15,12 @@ SELECT * FROM orders
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Filtering Arrays
+
+-- COMMAND ----------
+
 SELECT
   order_id,
   books,
@@ -33,6 +39,12 @@ WHERE size(multiple_copies) > 0;
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Transforming Arrays
+
+-- COMMAND ----------
+
 SELECT
   order_id,
   books,
@@ -41,6 +53,11 @@ SELECT
     b -> CAST(b.subtotal * 0.8 AS INT)
   ) AS subtotal_after_discount
 FROM orders;
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## User Defined Functions (UDF)
 
 -- COMMAND ----------
 
@@ -82,7 +99,3 @@ FROM customers
 
 DROP FUNCTION get_url;
 DROP FUNCTION site_type;
-
--- COMMAND ----------
-
-

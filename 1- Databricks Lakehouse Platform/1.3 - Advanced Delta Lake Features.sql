@@ -1,5 +1,7 @@
 -- Databricks notebook source
-
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Delta Time Travel
 
 -- COMMAND ----------
 
@@ -36,6 +38,12 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## OPTIMIZE Command
+
+-- COMMAND ----------
+
 DESCRIBE DETAIL employees
 
 -- COMMAND ----------
@@ -54,6 +62,12 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## VACUUM Command
 
 -- COMMAND ----------
 
@@ -85,6 +99,12 @@ SELECT * FROM employees@v1
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Dropping Tables
+
+-- COMMAND ----------
+
 DROP TABLE employees
 
 -- COMMAND ----------
@@ -94,7 +114,3 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
-
--- COMMAND ----------
-
-

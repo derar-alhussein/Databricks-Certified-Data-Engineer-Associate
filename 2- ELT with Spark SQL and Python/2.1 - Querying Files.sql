@@ -7,6 +7,11 @@
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Querying JSON 
+
+-- COMMAND ----------
+
 -- MAGIC %run ../Includes/Copy-Datasets
 
 -- COMMAND ----------
@@ -39,11 +44,27 @@ SELECT count(*) FROM json.`${dataset.bookstore}/customers-json`
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Querying text Format
+
+-- COMMAND ----------
+
 SELECT * FROM text.`${dataset.bookstore}/customers-json`
 
 -- COMMAND ----------
 
+-- MAGIC %md 
+-- MAGIC ## Querying binaryFile Format
+
+-- COMMAND ----------
+
 SELECT * FROM binaryFile.`${dataset.bookstore}/customers-json`
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Querying CSV 
 
 -- COMMAND ----------
 
@@ -63,6 +84,12 @@ LOCATION "${dataset.bookstore}/books-csv"
 -- COMMAND ----------
 
 SELECT * FROM books_csv
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Limitations of Non-Delta Tables
 
 -- COMMAND ----------
 
@@ -106,6 +133,11 @@ SELECT COUNT(*) FROM books_csv
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## CTAS Statements
+
+-- COMMAND ----------
+
 CREATE TABLE customers AS
 SELECT * FROM json.`${dataset.bookstore}/customers-json`;
 
@@ -137,7 +169,3 @@ SELECT * FROM books
 -- COMMAND ----------
 
 DESCRIBE EXTENDED books
-
--- COMMAND ----------
-
-
