@@ -80,7 +80,6 @@ load_new_data()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC ## Silver Layer
 # MAGIC
 # MAGIC #### Creating Static Lookup Table
 
@@ -99,7 +98,7 @@ load_new_data()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC #### Creating Silver Table
+# MAGIC ## Creating Silver Table
 
 # COMMAND ----------
 
