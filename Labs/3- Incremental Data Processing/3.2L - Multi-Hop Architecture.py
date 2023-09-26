@@ -173,7 +173,3 @@ for s in spark.streams.active:
     print("Stopping stream: " + s.id)
     s.stop()
     s.awaitTermination()
-
-# COMMAND ----------
-
-

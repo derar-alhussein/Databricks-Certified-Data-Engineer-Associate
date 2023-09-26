@@ -11,8 +11,20 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Exploring The Source dDirectory
+
+# COMMAND ----------
+
 files = dbutils.fs.ls(f"{dataset_bookstore}/orders-raw")
 display(files)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+# MAGIC ## Auto Loader
 
 # COMMAND ----------
 
@@ -22,6 +34,12 @@ display(files)
     .option("cloudFiles.schemaLocation", "dbfs:/mnt/demo/checkpoints/orders_raw")
     .load(f"{dataset_bookstore}/orders-raw")
     .createOrReplaceTempView("orders_raw_temp"))
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+# MAGIC ## Enriching Raw Data
 
 # COMMAND ----------
 
@@ -35,6 +53,11 @@ display(files)
 
 # MAGIC %sql
 # MAGIC SELECT * FROM orders_tmp
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Creating Bronze Table
 
 # COMMAND ----------
 
@@ -56,6 +79,13 @@ load_new_data()
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ## Silver Layer
+# MAGIC
+# MAGIC #### Creating Static Lookup Table
+
+# COMMAND ----------
+
 (spark.read
       .format("json")
       .load(f"{dataset_bookstore}/customers-json")
@@ -65,6 +95,11 @@ load_new_data()
 
 # MAGIC %sql
 # MAGIC SELECT * FROM customers_lookup
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC #### Creating Silver Table
 
 # COMMAND ----------
 
@@ -108,6 +143,11 @@ load_new_data()
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ## Creating Gold Table
+
+# COMMAND ----------
+
 (spark.readStream
   .table("orders_silver")
   .createOrReplaceTempView("orders_silver_tmp"))
@@ -142,11 +182,13 @@ load_new_data()
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Stopping active streams
+
+# COMMAND ----------
+
 for s in spark.streams.active:
     print("Stopping stream: " + s.id)
     s.stop()
     s.awaitTermination()
-
-# COMMAND ----------
-
-

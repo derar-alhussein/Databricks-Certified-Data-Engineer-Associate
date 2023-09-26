@@ -11,8 +11,20 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Exploring The Source dDirectory
+
+# COMMAND ----------
+
 files = dbutils.fs.ls(f"{dataset_bookstore}/orders-raw")
 display(files)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+# MAGIC ## Auto Loader
 
 # COMMAND ----------
 
@@ -38,6 +50,12 @@ display(files)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Landing New Files
+
+# COMMAND ----------
+
 load_new_data()
 
 # COMMAND ----------
@@ -52,8 +70,20 @@ display(files)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Exploring Table History
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC DESCRIBE HISTORY orders_updates
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+# MAGIC ## Cleaning Up
 
 # COMMAND ----------
 
@@ -63,7 +93,3 @@ display(files)
 # COMMAND ----------
 
 dbutils.fs.rm("dbfs:/mnt/demo/orders_checkpoint", True)
-
-# COMMAND ----------
-
-
