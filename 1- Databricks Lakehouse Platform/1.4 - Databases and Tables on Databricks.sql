@@ -102,7 +102,7 @@ DROP TABLE external_new_default;
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/managed_new_default'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/new_default.db/managed_new_default'
 
 -- COMMAND ----------
 
