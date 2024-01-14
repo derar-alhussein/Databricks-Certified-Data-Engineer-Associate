@@ -152,6 +152,11 @@ SELECT * FROM books_unparsed;
 
 -- COMMAND ----------
 
+create schema if not exists mydb;
+use mydb;
+
+-- COMMAND ----------
+
 CREATE TEMP VIEW books_tmp_vw
    (book_id STRING, title STRING, author STRING, category STRING, price DOUBLE)
 USING CSV

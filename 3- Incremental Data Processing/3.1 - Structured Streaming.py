@@ -7,6 +7,11 @@
 
 # COMMAND ----------
 
+# MAGIC %sql
+# MAGIC use mydb;
+
+# COMMAND ----------
+
 # MAGIC %run ../Includes/Copy-Datasets
 
 # COMMAND ----------
@@ -131,3 +136,7 @@
 # MAGIC %sql
 # MAGIC SELECT *
 # MAGIC FROM author_counts
+
+# COMMAND ----------
+
+
