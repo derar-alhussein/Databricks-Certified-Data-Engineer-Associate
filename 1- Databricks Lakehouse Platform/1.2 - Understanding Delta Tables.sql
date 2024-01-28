@@ -4,7 +4,9 @@
 
 -- COMMAND ----------
 
-CREATE TABLE employees
+CREATE TABLE IF NOT EXISTS employees
+-- USING DELTA 
+-- the default is DELTA format so we don't need to specify it
   (id INT, name STRING, salary DOUBLE);
 
 -- COMMAND ----------
@@ -13,7 +15,8 @@ CREATE TABLE employees
 -- MAGIC
 -- MAGIC ## Catalog Explorer
 -- MAGIC
--- MAGIC Check the created **employees** table in the **Catalog** explorer.
+-- MAGIC Check the created **employees** table in the **Catalog** explorer.<br>
+-- MAGIC Previously versions of Databricks called it "Data" (as we see in the course video.)
 
 -- COMMAND ----------
 
@@ -53,6 +56,7 @@ SELECT * FROM employees
 
 -- MAGIC %md
 -- MAGIC ## Exploring Table Metadata
+-- MAGIC With the command `DESCRIBE DETAILS` we can access important details about the created DELTA tables.
 
 -- COMMAND ----------
 
@@ -62,6 +66,8 @@ DESCRIBE DETAIL employees
 
 -- MAGIC %md
 -- MAGIC ## Exploring Table Directory
+-- MAGIC We can use the `%fs` magic command to list the files that belong to the `EMPLOYEES` table that we created.<br>
+-- MAGIC Also, notice that we have a `_delta_log/` folder with the JSON files from the table transaction log. 
 
 -- COMMAND ----------
 
@@ -69,8 +75,13 @@ DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees/_delta_log'
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC ## Updating Table
+-- MAGIC Let's now perform an update and check what happens to the table content and metadata. 
 
 -- COMMAND ----------
 
@@ -88,20 +99,27 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
-DESCRIBE DETAIL employees
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees/_delta_log'
 
 -- COMMAND ----------
 
-SELECT * FROM employees
+DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC ## Exploring Table History
+-- MAGIC Another important information about your table that you can access through SQL is `DESCRIBE HISTORY`, where you can access the operations executed over the current table.
 
 -- COMMAND ----------
 
 DESCRIBE HISTORY employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Understanding the delta log
+-- MAGIC Finally, we can check a delta log JSON file to visualize the informations generated every time you execute a operation over your Delta table.
 
 -- COMMAND ----------
 
