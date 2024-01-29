@@ -1,6 +1,15 @@
 -- Databricks notebook source
 -- MAGIC %md
+-- MAGIC # Databases and Tables on Databricks
+-- MAGIC In this notebook we'll explore a few concepts about the data infrastructure behind databases and tables.
+
+-- COMMAND ----------
+
+-- MAGIC %md
 -- MAGIC ## Managed Tables
+-- MAGIC Managed tables are resources that are created under the database directory. <br>
+-- MAGIC And when dropping the table, delete all the underlying data files
+-- MAGIC
 
 -- COMMAND ----------
 
@@ -17,8 +26,9 @@ DESCRIBE EXTENDED managed_default
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC
 -- MAGIC ## External Tables
+-- MAGIC External tables are created outside your database directory.<br>
+-- MAGIC Dropping the table, **will not** delete all the underlying data files.
 
 -- COMMAND ----------
 
@@ -36,8 +46,8 @@ DESCRIBE EXTENDED external_default
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC
 -- MAGIC ## Dropping Tables
+-- MAGIC Let's now compare the behaviour of both managed and external tables when deleting.
 
 -- COMMAND ----------
 
@@ -59,6 +69,7 @@ DROP TABLE external_default
 
 -- MAGIC %md
 -- MAGIC ## Creating Schemas
+-- MAGIC If needed, you can create new databases/schemas other than the default to host new tables.
 
 -- COMMAND ----------
 
@@ -112,6 +123,7 @@ DROP TABLE external_new_default;
 
 -- MAGIC %md
 -- MAGIC ## Creating Schemas in Custom Location
+-- MAGIC If you want, you can also specify the location of custom storage location for your database.
 
 -- COMMAND ----------
 
@@ -161,3 +173,7 @@ DROP TABLE external_custom;
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/mnt/demo/external_custom'
+
+-- COMMAND ----------
+
+
