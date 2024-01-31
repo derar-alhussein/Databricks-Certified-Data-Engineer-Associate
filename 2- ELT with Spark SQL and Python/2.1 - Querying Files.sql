@@ -1,4 +1,10 @@
 -- Databricks notebook source
+-- MAGIC %md
+-- MAGIC # Querying external files
+-- MAGIC In this notebook we'll explore a few possibilities on how to read data from files.
+
+-- COMMAND ----------
+
 -- MAGIC %md-sandbox
 -- MAGIC
 -- MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
@@ -8,7 +14,8 @@
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## Querying JSON 
+-- MAGIC ## Querying JSON
+-- MAGIC First, we'll copy a few files to our local dbfs.
 
 -- COMMAND ----------
 
@@ -46,6 +53,7 @@ SELECT count(*) FROM json.`${dataset.bookstore}/customers-json`
 
 -- MAGIC %md
 -- MAGIC ## Querying text Format
+-- MAGIC Now, we'll query text format files.
 
 -- COMMAND ----------
 
@@ -88,8 +96,8 @@ SELECT * FROM books_csv
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC
 -- MAGIC ## Limitations of Non-Delta Tables
+-- MAGIC Let's investigate a few informations about the created tables to understand its limitations.
 
 -- COMMAND ----------
 
@@ -169,3 +177,7 @@ SELECT * FROM books
 -- COMMAND ----------
 
 DESCRIBE EXTENDED books
+
+-- COMMAND ----------
+
+
