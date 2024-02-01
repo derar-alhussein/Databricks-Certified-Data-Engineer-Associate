@@ -22,7 +22,17 @@
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC fil = dbutils.fs.ls('dbfs:/mnt/demo-datasets/bookstore/customers-json')
+-- MAGIC display(fil)
+
+-- COMMAND ----------
+
 SELECT * FROM json.`${dataset.bookstore}/customers-json/export_001.json`
+
+-- COMMAND ----------
+
+select * from json.`${dataset.bookstore}/customers-json/export_001.json`
 
 -- COMMAND ----------
 

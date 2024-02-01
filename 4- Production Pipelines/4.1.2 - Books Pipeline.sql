@@ -1,22 +1,31 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC 
--- MAGIC 
--- MAGIC 
+-- MAGIC
+-- MAGIC
+-- MAGIC
 -- MAGIC ## Bronze Layer Tables
+
+-- COMMAND ----------
+
+-- MAGIC %run ../Includes/Copy-Datasets
+
+-- COMMAND ----------
+
+
+Select * from json.`${dataset.bookstore}/books-cdc/02.json`
 
 -- COMMAND ----------
 
 CREATE OR REFRESH STREAMING LIVE TABLE books_bronze
 COMMENT "The raw books data, ingested from CDC feed"
-AS SELECT * FROM cloud_files("${datasets_path}/books-cdc", "json")
+AS SELECT * FROM cloud_files("${dataset.bookstore}/books-cdc", "json")
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC 
--- MAGIC 
--- MAGIC 
+-- MAGIC
+-- MAGIC
+-- MAGIC
 -- MAGIC ## Silver Layer Tables
 
 -- COMMAND ----------
@@ -33,8 +42,8 @@ APPLY CHANGES INTO LIVE.books_silver
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC 
--- MAGIC 
+-- MAGIC
+-- MAGIC
 -- MAGIC ## Gold Layer Tables
 
 -- COMMAND ----------
