@@ -18,28 +18,32 @@
 
 -- COMMAND ----------
 
+SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC #### Q1- Declaring Bronze Tables
 -- MAGIC
--- MAGIC Declare a streaming live table, **`enrollments_bronze`**, that ingests JSON data incrementally using Auto Loader from the directory **"${datasets_path}/enrollments-json-raw"**
+-- MAGIC Declare a streaming live table, **`enrollments_bronze`**, that ingests JSON data incrementally using Auto Loader from the directory **"${datasets.path}/enrollments-json-raw"**
 
 -- COMMAND ----------
 
 -- ANSWER
 CREATE OR REFRESH STREAMING LIVE TABLE enrollments_bronze
-AS SELECT * FROM cloud_files("${dataset_path}/enrollments-json-raw", "json",
+AS SELECT * FROM cloud_files("${datasets.path}/enrollments-json-raw", "json",
                              map("cloudFiles.inferColumnTypes", "true"))
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Declare a live table, **`students_bronze`**, that load data directly from JSON files in the directory **"${datasets_path}/students-json"**
+-- MAGIC Declare a live table, **`students_bronze`**, that load data directly from JSON files in the directory **"${datasets.path}/students-json"**
 
 -- COMMAND ----------
 
 -- ANSWER
 CREATE OR REFRESH LIVE TABLE students_bronze
-AS SELECT * FROM json.`${dataset_path}/students-json`
+AS SELECT * FROM json.`${datasets.path}/students-json`
 
 -- COMMAND ----------
 
@@ -113,7 +117,7 @@ AS
 -- MAGIC | Cluster mode | Choose **Fixed size**|
 -- MAGIC | Workers | Enter **0**|
 -- MAGIC | Photon Acceleration | Leave it unchecked |
--- MAGIC | Advanced Configuration | Click **Add Configuration** and enter:<br> - Key: **dataset_path** <br> - Value: **dbfs:/mnt/DE-Associate/datasets/school** |
+-- MAGIC | Advanced Configuration | Click **Add Configuration** and enter:<br> - Key: **datasets.path** <br> - Value: **dbfs:/mnt/DE-Associate/datasets/school** |
 -- MAGIC | Channel | Choose **Current**|
 -- MAGIC
 -- MAGIC Finally, click **Create**.
