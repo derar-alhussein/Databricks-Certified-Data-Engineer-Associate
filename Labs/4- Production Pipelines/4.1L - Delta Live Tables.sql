@@ -18,7 +18,7 @@
 
 -- COMMAND ----------
 
-SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
+SET datasets.path=dbfs:/mnt/DE-Associate/datasets/school;
 
 -- COMMAND ----------
 
