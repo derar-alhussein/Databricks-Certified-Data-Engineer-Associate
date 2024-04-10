@@ -13,7 +13,7 @@
 
 # MAGIC %md
 # MAGIC
-# MAGIC ## Exploring The Source dDirectory
+# MAGIC ## Exploring The Source Directory
 
 # COMMAND ----------
 
