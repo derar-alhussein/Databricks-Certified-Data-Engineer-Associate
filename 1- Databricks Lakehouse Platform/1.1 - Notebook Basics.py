@@ -9,9 +9,9 @@ print("Hello World!")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC # Title 1
-# MAGIC ## Title 2
-# MAGIC ### Title 3
+# MAGIC # test 1
+# MAGIC ## Test 2
+# MAGIC ### Test 3
 # MAGIC
 # MAGIC text with a **bold** and *italicized* in it.
 # MAGIC
@@ -49,7 +49,7 @@ print(full_name)
 
 # COMMAND ----------
 
-# MAGIC %fs ls '/databricks-datasets'
+# MAGIC %fs ls 'dbfs:/databricks-datasets/COVID/covid-19-data/us.csv'
 
 # COMMAND ----------
 
@@ -66,7 +66,13 @@ print(files)
 
 # COMMAND ----------
 
-display(files)
+df = spark.read.format('csv')  \
+               .options(inferSchema =True,header =True)  \
+               .load('dbfs:/databricks-datasets/COVID/covid-19-data/us.csv')
+
+# COMMAND ----------
+
+display(df)
 
 # COMMAND ----------
 
