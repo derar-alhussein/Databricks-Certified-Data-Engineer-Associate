@@ -9,7 +9,7 @@ print("Hello World!")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC # Title 1
+# MAGIC # I am making the change to try Repository Commit and Push Command after settign Git Integration
 # MAGIC ## Title 2
 # MAGIC ### Title 3
 # MAGIC
@@ -17,7 +17,7 @@ print("Hello World!")
 # MAGIC
 # MAGIC Ordered list
 # MAGIC 1. first
-# MAGIC 1. second
+# MAGIC 2. second
 # MAGIC 1. third
 # MAGIC
 # MAGIC Unordered list
@@ -31,8 +31,8 @@ print("Hello World!")
 # MAGIC
 # MAGIC And of course, tables:
 # MAGIC
-# MAGIC | user_id | user_name |
-# MAGIC |---------|-----------|
+# MAGIC | user_id | user_name | last_name |
+# MAGIC |---------|-----------|-----------|
 # MAGIC |    1    |    Adam   |
 # MAGIC |    2    |    Sarah  |
 # MAGIC |    3    |    John   |
