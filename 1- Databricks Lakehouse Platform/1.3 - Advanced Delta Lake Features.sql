@@ -5,6 +5,10 @@
 
 -- COMMAND ----------
 
+USE CATALOG hive_metastore
+
+-- COMMAND ----------
+
 DESCRIBE HISTORY employees
 
 -- COMMAND ----------
