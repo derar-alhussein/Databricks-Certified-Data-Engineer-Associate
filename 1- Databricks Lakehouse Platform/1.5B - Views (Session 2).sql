@@ -1,4 +1,8 @@
 -- Databricks notebook source
+USE CATALOG hive_metastore;
+
+-- COMMAND ----------
+
 SHOW TABLES;
 
 -- COMMAND ----------

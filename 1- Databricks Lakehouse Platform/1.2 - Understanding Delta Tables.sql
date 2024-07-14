@@ -4,6 +4,10 @@
 
 -- COMMAND ----------
 
+USE CATALOG hive_metastore
+
+-- COMMAND ----------
+
 CREATE TABLE employees
   (id INT, name STRING, salary DOUBLE);
 

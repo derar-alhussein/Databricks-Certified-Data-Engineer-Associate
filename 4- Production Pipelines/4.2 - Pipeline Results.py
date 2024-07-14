@@ -20,6 +20,8 @@ display(files)
 # COMMAND ----------
 
 # MAGIC %sql
+# MAGIC USE CATALOG hive_metastore;
+# MAGIC
 # MAGIC SELECT * FROM demo_bookstore_dlt_db.cn_daily_customer_books
 
 # COMMAND ----------

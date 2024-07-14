@@ -95,3 +95,8 @@ def load_new_json_data(all=False):
 # COMMAND ----------
 
 download_dataset(data_source_uri, dataset_bookstore)
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC USE CATALOG hive_metastore
