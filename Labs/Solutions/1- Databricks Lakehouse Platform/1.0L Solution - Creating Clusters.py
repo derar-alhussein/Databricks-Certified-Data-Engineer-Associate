@@ -14,7 +14,7 @@
 # MAGIC |--|--|
 # MAGIC |Cluster name|**Demo Cluster**|
 # MAGIC |Cluster mode|**Signle node**|
-# MAGIC |Runtime version|Select the latest Databricks runtime version with LTS|
+# MAGIC |Runtime version|Select the Databricks runtime version 13.3 LTS|
 # MAGIC |Photon Acceleration| Uncheck the option |
 # MAGIC |Node type|4 cores|
 # MAGIC |Auto termination|30 minutes|

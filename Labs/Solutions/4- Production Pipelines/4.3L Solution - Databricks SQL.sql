@@ -27,7 +27,7 @@
 -- COMMAND ----------
 
 SELECT profile:address:country as country, count(student_id) AS students_count
-FROM de_associate_school.students
+FROM hive_metastore.de_associate_school.students
 GROUP BY profile:address:country
 ORDER BY students_count DESC
 LIMIT 10
@@ -78,8 +78,8 @@ LIMIT 10
 
 SELECT cast(from_unixtime(enroll_timestamp, 'yyyy-MM-dd HH:mm:ss') AS date) enroll_timestamp,
         sum(total) AS enrollments_amount
-FROM de_associate_school.enrollments n
-INNER JOIN de_associate_school.students s ON s.student_id = n.student_id
+FROM hive_metastore.de_associate_school.enrollments n
+INNER JOIN hive_metastore.de_associate_school.students s ON s.student_id = n.student_id
 GROUP BY enroll_timestamp
 
 -- COMMAND ----------

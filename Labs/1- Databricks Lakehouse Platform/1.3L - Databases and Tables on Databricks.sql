@@ -5,6 +5,17 @@
 -- COMMAND ----------
 
 -- MAGIC %md
+-- MAGIC #### Setting the default catalog
+-- MAGIC
+-- MAGIC Run the cell below to set the current catalog to **hive_metastore**
+
+-- COMMAND ----------
+
+USE CATALOG hive_metastore;
+
+-- COMMAND ----------
+
+-- MAGIC %md
 -- MAGIC #### Q1 - Creating managed table
 -- MAGIC
 -- MAGIC In the default database, create a managed table named **movies_managed** that has the following schema:
@@ -84,7 +95,7 @@ DESCRIBE EXTENDED actors_external
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/actors_external'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/movies_managed'
 
 -- COMMAND ----------
 

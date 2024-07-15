@@ -68,6 +68,14 @@ def get_index(dir):
 
 # COMMAND ----------
 
+def set_current_schema(schema_name, catalog_name='hive_metastore'):
+    spark.sql(f"USE CATALOG {catalog_name}")
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
+    spark.sql(f"USE {schema_name}")
+    print(f"Schema for the hands-on labs: {catalog_name}.{schema_name}")
+
+# COMMAND ----------
+
 # Structured Streaming
 streaming_dir = f"{dataset_school}/enrollments-streaming"
 raw_dir = f"{dataset_school}/enrollments-raw"
@@ -123,20 +131,5 @@ def load_new_json_data(all=False):
 
 # COMMAND ----------
 
-
-
-# COMMAND ----------
-
 download_dataset(data_source_uri, dataset_school)
-
-spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
-spark.sql(f"USE {db_name}")
-print(f"Schema for the hands-on labs: {db_name}")
-
-# COMMAND ----------
-
-
-
-# COMMAND ----------
-
-
+set_current_schema(db_name)
