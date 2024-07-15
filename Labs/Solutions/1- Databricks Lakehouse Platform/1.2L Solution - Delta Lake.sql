@@ -12,6 +12,8 @@
 
 -- COMMAND ----------
 
+USE CATALOG hive_metastore;
+
 CREATE OR REPLACE TABLE persons
   (id INT, name STRING, age INT);
 
