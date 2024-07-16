@@ -30,8 +30,7 @@
 x = 5
 y = 10
 result = x + y
-
---------------------
+print(result)
 
 # COMMAND ----------
 
@@ -42,9 +41,9 @@ result = x + y
 
 # COMMAND ----------
 
-_____________________
-
-SELECT 5 + 10
+# MAGIC %sql
+# MAGIC
+# MAGIC SELECT 5 + 10
 
 # COMMAND ----------
 
@@ -61,6 +60,14 @@ SELECT 5 + 10
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC # Animals
+# MAGIC - Cats
+# MAGIC - Dogs
+# MAGIC - Birds
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC #### Q6 - Using %run command
 # MAGIC
 # MAGIC 1. Create a new Python notebook named **helper** in the current directory (i.e., in the **labs/1- Databricks Lakehouse Platform** folder)
@@ -71,7 +78,7 @@ SELECT 5 + 10
 
 # COMMAND ----------
 
---------------------
+# MAGIC %run ./helper
 
 # COMMAND ----------
 
