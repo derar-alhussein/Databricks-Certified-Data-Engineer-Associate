@@ -105,7 +105,3 @@ AS
   FROM LIVE.orders_cleaned
   WHERE country = "France"
   GROUP BY customer_id, f_name, l_name, date_trunc("DD", order_timestamp)
-
--- COMMAND ----------
-
-

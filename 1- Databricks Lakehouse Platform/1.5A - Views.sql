@@ -45,6 +45,10 @@ SHOW TABLES;
 
 -- COMMAND ----------
 
+DESCRIBE TABLE view_apple_phones;
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC
 -- MAGIC ## Creating Temporary Views
