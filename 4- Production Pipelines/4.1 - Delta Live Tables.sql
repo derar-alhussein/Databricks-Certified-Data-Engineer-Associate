@@ -28,6 +28,7 @@ SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
 
 -- COMMAND ----------
 
+-- autoloader - cloud_files
 CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
 COMMENT "The raw books orders, ingested from orders-raw"
 AS SELECT * FROM cloud_files("${datasets.path}/orders-json-raw", "json",

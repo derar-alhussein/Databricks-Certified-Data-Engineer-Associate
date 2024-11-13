@@ -16,8 +16,8 @@ CREATE VIEW hive_metastore.hr_db.paris_emplyees_vw
 AS SELECT * FROM hive_metastore.hr_db.employees WHERE city = 'Paris';
 
 ------------------------------------------------------
-
-GRANT SELECT, MODIFY, READ_METADATA, CREATE ON SCHEMA hive_metastore.hr_db TO hr_team;
+-- Remember USAGE.
+GRANT SELECT, MODIFY, READ_METADATA, CREATE, USAGE ON SCHEMA hive_metastore.hr_db TO hr_team;
 
 GRANT USAGE ON SCHEMA hive_metastore.hr_db TO hr_team;
 

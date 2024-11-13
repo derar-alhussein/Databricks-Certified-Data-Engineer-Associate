@@ -25,6 +25,8 @@ SELECT * FROM orders
 
 -- COMMAND ----------
 
+-- create the table or replace th contents of the table.
+-- if schema is different, schema will be updated.
 CREATE OR REPLACE TABLE orders AS
 SELECT * FROM parquet.`${dataset.bookstore}/orders`
 
@@ -34,6 +36,8 @@ DESCRIBE HISTORY orders
 
 -- COMMAND ----------
 
+-- table need to exist already.
+-- schema needs to be the same.
 INSERT OVERWRITE orders
 SELECT * FROM parquet.`${dataset.bookstore}/orders`
 
@@ -43,6 +47,7 @@ DESCRIBE HISTORY orders
 
 -- COMMAND ----------
 
+-- example of how you cannot change the schema of the original table.
 INSERT OVERWRITE orders
 SELECT *, current_timestamp() FROM parquet.`${dataset.bookstore}/orders`
 
@@ -92,6 +97,16 @@ SELECT * FROM books_updates
 
 -- COMMAND ----------
 
+-- condition to insert data into the table. if condition is met, insert.
+MERGE INTO books b
+USING books_updates u
+ON b.book_id = u.book_id AND b.title = u.title
+WHEN NOT MATCHED AND u.category = 'Computer Science' THEN 
+  INSERT *
+
+-- COMMAND ----------
+
+-- condition to insert data into the table. if condition is met, insert.
 MERGE INTO books b
 USING books_updates u
 ON b.book_id = u.book_id AND b.title = u.title

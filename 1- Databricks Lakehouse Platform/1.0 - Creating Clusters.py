@@ -55,6 +55,11 @@
 # COMMAND ----------
 
 # MAGIC %md
+# MAGIC
+
+# COMMAND ----------
+
+# MAGIC %md
 # MAGIC 5-	Select the Databricks runtime version 13.3 LTS (Long Term Support)
 # MAGIC
 # MAGIC 6-	Uncheck the option for the **Use Photon Acceleration**

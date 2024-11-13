@@ -163,3 +163,34 @@ DROP TABLE external_custom;
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/mnt/demo/external_custom'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC # DELETE files on AZURE
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC dbutils.fs.ls("dbfs:/mnt/demo/")
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC dbutils.fs.ls("dbfs:/mnt/demo/external_custom")
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC dbutils.fs.ls("dbfs:/mnt/demo/external_new_default")
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC dbutils.fs.ls("dbfs:/mnt/demo/external_default")
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC dbutils.fs.rm("dbfs:/mnt/demo/", recurse=True)
+-- MAGIC

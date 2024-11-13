@@ -162,6 +162,9 @@ load_new_data()
 
 # COMMAND ----------
 
+# availableNow = true option, means you have to run the query yourself.
+# use case: you just want to provide an aggregate each week to your end customers.
+
 (spark.table("daily_customer_books_tmp")
       .writeStream
       .format("delta")

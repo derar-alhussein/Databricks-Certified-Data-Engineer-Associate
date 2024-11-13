@@ -25,22 +25,30 @@ DESCRIBE customers
 
 -- COMMAND ----------
 
+-- nested json columns. How to deal with these?
+-- later to struct type. native type in Spark.
 SELECT customer_id, profile:first_name, profile:address:country 
 FROM customers
 
 -- COMMAND ----------
 
+-- it fails because it needs the schema.
 SELECT from_json(profile) AS profile_struct
   FROM customers;
 
 -- COMMAND ----------
 
+-- take a sample from the profile column, no null values.
+-- copy sample to next code cell.
 SELECT profile 
 FROM customers 
 LIMIT 1
 
 -- COMMAND ----------
 
+-- copy past the sample row profile to below code.
+-- this is how spark knows the schema.
+-- to create a STRUCT TYPE. From STRING type.
 CREATE OR REPLACE TEMP VIEW parsed_customers AS
   SELECT customer_id, from_json(profile, schema_of_json('{"first_name":"Thomas","last_name":"Lane","gender":"Male","address":{"street":"06 Boulevard Victor Hugo","city":"Paris","country":"France"}}')) AS profile_struct
   FROM customers;
@@ -49,6 +57,7 @@ SELECT * FROM parsed_customers
 
 -- COMMAND ----------
 
+-- check the data_type of the columns.
 DESCRIBE parsed_customers
 
 -- COMMAND ----------
@@ -58,8 +67,9 @@ FROM parsed_customers
 
 -- COMMAND ----------
 
+-- move all teh struct data elements to their own columns.
 CREATE OR REPLACE TEMP VIEW customers_final AS
-  SELECT customer_id, profile_struct.*
+  SELECT customer_id, profile_struct.*,profile_struct.address.*
   FROM parsed_customers;
   
 SELECT * FROM customers_final
@@ -173,3 +183,47 @@ SELECT * FROM (
 );
 
 SELECT * FROM transactions
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TABLE transactions AS
+WITH pivoted_data AS (
+  SELECT * FROM (
+    SELECT
+      customer_id,
+      book.book_id AS book_id,
+      book.quantity AS quantity
+    FROM orders_enriched
+  ) PIVOT (
+    sum(quantity) FOR book_id in (
+      'B01'
+    )
+  )
+)
+SELECT
+  *,
+  COALESCE(B01, 0) * 2 AS B01_multiplied  -- Replace null with 0 before multiplying
+FROM pivoted_data;
+
+SELECT * FROM transactions;
+
+
+-- COMMAND ----------
+
+SELECT *
+FROM transactions
+WHERE customer_id LIKE '%716';
+
+
+-- COMMAND ----------
+
+SHOW TABLES
+
+-- COMMAND ----------
+
+-- Includes user defined functions.
+SHOW FUNCTIONS
+
+-- COMMAND ----------
+
+

@@ -53,10 +53,11 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC  SELECT * 
-# MAGIC  FROM books_streaming_tmp_vw
-# MAGIC  ORDER BY author
+# -- you can't perform this operation.
+%sql
+ SELECT * 
+ FROM books_streaming_tmp_vw
+ ORDER BY author
 
 # COMMAND ----------
 
@@ -66,14 +67,18 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC CREATE OR REPLACE TEMP VIEW author_counts_tmp_vw AS (
-# MAGIC   SELECT author, count(book_id) AS total_books
-# MAGIC   FROM books_streaming_tmp_vw
-# MAGIC   GROUP BY author
-# MAGIC )
+-- create TEMP VIEW. to prepare data move to Python.
+%sql
+CREATE OR REPLACE TEMP VIEW author_counts_tmp_vw AS (
+  SELECT author, count(book_id) AS total_books
+  FROM books_streaming_tmp_vw
+  GROUP BY author
+)
 
 # COMMAND ----------
+
+# create streaming in python.
+# store checkpoint information.
 
 (spark.table("author_counts_tmp_vw")                               
       .writeStream  
@@ -85,9 +90,11 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT *
-# MAGIC FROM author_counts
+# output table is just a table. you can query.
+
+%sql
+SELECT *
+FROM author_counts
 
 # COMMAND ----------
 
@@ -96,11 +103,12 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC INSERT INTO books
-# MAGIC values ("B19", "Introduction to Modeling and Simulation", "Mark W. Spong", "Computer Science", 25),
-# MAGIC         ("B20", "Robot Modeling and Control", "Mark W. Spong", "Computer Science", 30),
-# MAGIC         ("B21", "Turing's Vision: The Birth of Computer Science", "Chris Bernhardt", "Computer Science", 35)
+# add new data, keep above streaming ongoing to see the changes.
+%sql
+INSERT INTO books
+values ("B19", "Introduction to Modeling and Simulation", "Mark W. Spong", "Computer Science", 25),
+        ("B20", "Robot Modeling and Control", "Mark W. Spong", "Computer Science", 30),
+        ("B21", "Turing's Vision: The Birth of Computer Science", "Chris Bernhardt", "Computer Science", 35)
 
 # COMMAND ----------
 

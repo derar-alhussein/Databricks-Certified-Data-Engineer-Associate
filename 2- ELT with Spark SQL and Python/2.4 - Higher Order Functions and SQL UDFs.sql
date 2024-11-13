@@ -21,6 +21,9 @@ SELECT * FROM orders
 
 -- COMMAND ----------
 
+-- lambda function. 
+-- filter on array
+
 SELECT
   order_id,
   books,
@@ -45,6 +48,12 @@ WHERE size(multiple_copies) > 0;
 
 -- COMMAND ----------
 
+-- what is the b here?
+-- transformation is done on ... it is a lambda function. -> this is the argument.
+-- anonymous function - lambda function.
+-- take books. b is an element of the array books. then on b.subtotal take subtotal. CAST as INT.
+-- display AS. 
+
 SELECT
   order_id,
   books,
@@ -60,6 +69,15 @@ FROM orders;
 -- MAGIC ## User Defined Functions (UDF)
 
 -- COMMAND ----------
+
+-- they can use SPARK.
+-- use parallelism capabilty of Spark
+
+-- optional parameters.
+-- get url from email address function to be created.
+-- function split email by @ character.
+-- we keep the second element [1]
+-- to get the domain of the email.
 
 CREATE OR REPLACE FUNCTION get_url(email STRING)
 RETURNS STRING
@@ -81,13 +99,16 @@ DESCRIBE FUNCTION EXTENDED get_url
 
 -- COMMAND ----------
 
+-- complex UDF. 
+-- multiple conditions
+
 CREATE FUNCTION site_type(email STRING)
 RETURNS STRING
 RETURN CASE 
           WHEN email like "%.com" THEN "Commercial business"
           WHEN email like "%.org" THEN "Non-profits organization"
           WHEN email like "%.edu" THEN "Educational institution"
-          ELSE concat("Unknow extenstion for domain: ", split(email, "@")[1])
+          ELSE concat("Unknow extension for domain: ", split(email, "@")[1])
        END;
 
 -- COMMAND ----------
