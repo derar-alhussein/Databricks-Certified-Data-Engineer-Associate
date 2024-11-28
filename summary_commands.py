@@ -8,6 +8,7 @@
 # MAGIC display(test) # preview might not include all files. disclaimer.
 # MAGIC # %md
 # MAGIC # test
+# MAGIC # test2
 
 # COMMAND ----------
 
