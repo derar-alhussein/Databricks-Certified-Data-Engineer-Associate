@@ -1,2 +1,6 @@
 # Databricks notebook source
-full_name = "Stefan Brus"
+country='France'
+
+# COMMAND ----------
+
+
