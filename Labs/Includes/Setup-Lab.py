@@ -1,5 +1,5 @@
 # Databricks notebook source
-data_source_uri = "wasbs://course-resources@dalhussein.blob.core.windows.net/datasets/school/v1/"
+data_source_uri = "s3://dalhussein-courses/datasets/school/v1/"
 dataset_school = 'dbfs:/mnt/DE-Associate/datasets/school'
 checkpoint_path = 'dbfs:/mnt/DE-Associate/checkpoints/school'
 dlt_path = 'dbfs:/mnt/DE-Associate/dlt/school'
