@@ -4,7 +4,12 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+USE CATALOG udc;
+USE SCHEMA silver;
+
+-- COMMAND ----------
+
+-- USE CATALOG hive_metastore
 
 -- COMMAND ----------
 
@@ -69,7 +74,7 @@ DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+dbutils.fs.ls("s3://databricks-hoqxarhjnqzvazrsxaalz8-cloud-storage-bucket/unity-catalog/3485344278673637/__unitystorage/schemas/1e20cf74-4749-40a0-b11b-8c99e4cc11db/tables/12c6abef-5086-4808-9e12-7fb819763598")
 
 -- COMMAND ----------
 

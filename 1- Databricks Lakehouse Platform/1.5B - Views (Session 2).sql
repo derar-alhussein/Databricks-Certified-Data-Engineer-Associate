@@ -1,5 +1,6 @@
 -- Databricks notebook source
-USE CATALOG hive_metastore;
+USE CATALOG udc;
+USE SCHEMA silver;
 
 -- COMMAND ----------
 

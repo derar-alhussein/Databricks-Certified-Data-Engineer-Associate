@@ -24,6 +24,11 @@
 
 SELECT * FROM json.`${dataset.bookstore}/customers-json/export_001.json`
 
+--SELECT customer_id
+--FROM json.`${dataset.bookstore}/customers-json/export_001.json`
+--GROUP BY customer_id
+--HAVING COUNT(*) > 1
+
 -- COMMAND ----------
 
 SELECT * FROM json.`${dataset.bookstore}/customers-json/export_*.json`
@@ -94,6 +99,7 @@ SELECT * FROM books_csv
 -- COMMAND ----------
 
 DESCRIBE EXTENDED books_csv
+--TypeがEXTERNALとなっており、これはdelta tableではないことを意味する。直接CSVファイルを参照しているテーブル。
 
 -- COMMAND ----------
 
