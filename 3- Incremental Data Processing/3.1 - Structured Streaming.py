@@ -17,77 +17,32 @@
 
 # COMMAND ----------
 
-(spark.readStream
-      .table("books")
-      .createOrReplaceTempView("books_streaming_tmp_vw")
-)
+# using pyspark, create a streaming view 'books_streaming_tmp_vw' from 'books'
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC
-# MAGIC ## Displaying Streaming Data
+# display the streaming data
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT * FROM books_streaming_tmp_vw
+# creating a count of records in book_streaming_tmp_vw
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC ## Applying Transformations
+# order 'books_treaming_tmp_vw' by author; what happens?
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT author, count(book_id) AS total_books
-# MAGIC FROM books_streaming_tmp_vw
-# MAGIC GROUP BY author
+# using SQL create a book count by author, based on book_streaming_tmp_vw
+
+# using pyspark, persist the results of the streaming view to a table `author_counts`;
+#    save checkpoints to "dbfs:/mnt/demo/author_counts_checkpoint"
+#    use a trigger time of 4 seconds
+
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC
-# MAGIC ## Unsupported Operations
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC  SELECT * 
-# MAGIC  FROM books_streaming_tmp_vw
-# MAGIC  ORDER BY author
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC
-# MAGIC ## Persisting Streaming Data
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC CREATE OR REPLACE TEMP VIEW author_counts_tmp_vw AS (
-# MAGIC   SELECT author, count(book_id) AS total_books
-# MAGIC   FROM books_streaming_tmp_vw
-# MAGIC   GROUP BY author
-# MAGIC )
-
-# COMMAND ----------
-
-(spark.table("author_counts_tmp_vw")                               
-      .writeStream  
-      .trigger(processingTime='4 seconds')
-      .outputMode("complete")
-      .option("checkpointLocation", "dbfs:/mnt/demo/author_counts_checkpoint")
-      .table("author_counts")
-)
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC SELECT *
-# MAGIC FROM author_counts
+# show the contents of author_counts
 
 # COMMAND ----------
 
@@ -117,17 +72,7 @@
 
 # COMMAND ----------
 
-(spark.table("author_counts_tmp_vw")                               
-      .writeStream           
-      .trigger(availableNow=True)
-      .outputMode("complete")
-      .option("checkpointLocation", "dbfs:/mnt/demo/author_counts_checkpoint")
-      .table("author_counts")
-      .awaitTermination()
-)
-
+# using spark api, write all the current contents of author_counts_tmp_vw and terminate the streaming query
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT *
-# MAGIC FROM author_counts
+# show the contents of author_counts
