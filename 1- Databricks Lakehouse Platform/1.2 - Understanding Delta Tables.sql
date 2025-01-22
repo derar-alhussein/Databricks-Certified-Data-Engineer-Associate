@@ -54,56 +54,26 @@ VALUES
 SELECT * FROM employees
 
 -- COMMAND ----------
-
 -- MAGIC %md
--- MAGIC ## Exploring Table Metadata
+-- MAGIC ## Exploring Table Metadata and Directory
 
 -- COMMAND ----------
-
--- 
-DESCRIBE DETAIL employees
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC ## Exploring Table Directory
-
--- COMMAND ----------
--- List contents of database directory in dbfs
-
--- COMMAND ----------
+-- List metadata and contents of employees table, database directory and employees table in dbfs
 
 -- MAGIC %md
 -- MAGIC ## Updating Table
 
 -- COMMAND ----------
-
--- increase salary of employees starting with A
-
--- COMMAND ----------
-
-SELECT * FROM employees
+-- Increase the salary of all employees starting with A
 
 -- COMMAND ----------
-
--- List contents of database directory in dbfs
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
-
--- COMMAND ----------
+-- List metadata and contents of employees table, database directory and employees table in dbfs
 
 DESCRIBE DETAIL employees
 
 -- COMMAND ----------
-
-SELECT * FROM employees
-
--- COMMAND ----------
-
 -- MAGIC %md
 -- MAGIC ## Exploring Table History
 
 -- COMMAND ----------
-
 -- Show the version history of employees, and delta log, and data files in dbfs
-
