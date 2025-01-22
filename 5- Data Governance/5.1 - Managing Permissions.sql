@@ -17,12 +17,10 @@ AS SELECT * FROM hive_metastore.hr_db.employees WHERE city = 'Paris';
 
 ------------------------------------------------------
 
-GRANT SELECT, MODIFY, READ_METADATA, CREATE ON SCHEMA hive_metastore.hr_db TO hr_team;
+-- grant privileges to hr_team on hive_metastore.hr_db to read, modify and read medata
 
-GRANT USAGE ON SCHEMA hive_metastore.hr_db TO hr_team;
+-- grant privileges to a user email account on hive_metastore.hr_db to read, modify and read medata
 
-GRANT SELECT ON VIEW hive_metastore.hr_db.paris_emplyees_vw TO `adam@derar.cloud`;
+-- show existing grants
 
-SHOW GRANTS ON SCHEMA hive_metastore.hr_db;
-
-SHOW GRANTS ON VIEW hive_metastore.hr_db.paris_emplyees_vw;
+-- revoke provided grants

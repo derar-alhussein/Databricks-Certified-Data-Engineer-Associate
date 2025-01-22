@@ -11,9 +11,7 @@ SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
 
 -- COMMAND ----------
 
-CREATE OR REFRESH STREAMING LIVE TABLE books_bronze
-COMMENT "The raw books data, ingested from CDC feed"
-AS SELECT * FROM cloud_files("${datasets.path}/books-cdc", "json")
+-- create a streaming table `books_bronze` for the CDC feed in books-cdc/, using autoloader
 
 -- COMMAND ----------
 
@@ -25,41 +23,12 @@ AS SELECT * FROM cloud_files("${datasets.path}/books-cdc", "json")
 
 -- COMMAND ----------
 
-CREATE OR REFRESH STREAMING LIVE TABLE books_silver;
-
-APPLY CHANGES INTO LIVE.books_silver
-  FROM STREAM(LIVE.books_bronze)
-  KEYS (book_id)
-  APPLY AS DELETE WHEN row_status = "DELETE"
-  SEQUENCE BY row_time
-  COLUMNS * EXCEPT (row_status, row_time)
+-- create a streaming table books_silver and apply the CDC changes; also apply delete operations
 
 -- COMMAND ----------
 
--- MAGIC %md
--- MAGIC
--- MAGIC
--- MAGIC ## Gold Layer Tables
+-- create a delta table (non-streaming) of author_counts from books_silver
 
 -- COMMAND ----------
 
-CREATE LIVE TABLE author_counts_state
-  COMMENT "Number of books per author"
-AS SELECT author, count(*) as books_count, current_timestamp() updated_time
-  FROM LIVE.books_silver
-  GROUP BY author
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC ## DLT Views
-
--- COMMAND ----------
-
-CREATE LIVE VIEW books_sales
-  AS SELECT b.title, o.quantity
-    FROM (
-      SELECT *, explode(books) AS book 
-      FROM LIVE.orders_cleaned) o
-    INNER JOIN LIVE.books_silver b
-    ON o.book.book_id = b.book_id;
+-- create a DLT view of books sales based on orders_cleaned and books_silver views
