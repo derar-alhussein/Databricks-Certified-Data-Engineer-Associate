@@ -60,6 +60,7 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
+-- 
 DESCRIBE DETAIL employees
 
 -- COMMAND ----------
@@ -68,8 +69,7 @@ DESCRIBE DETAIL employees
 -- MAGIC ## Exploring Table Directory
 
 -- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- List contents of database directory in dbfs
 
 -- COMMAND ----------
 
@@ -78,15 +78,15 @@ DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
-UPDATE employees 
-SET salary = salary + 100
-WHERE name LIKE "A%"
+-- increase salary of employees starting with A
 
 -- COMMAND ----------
 
 SELECT * FROM employees
 
 -- COMMAND ----------
+
+-- List contents of database directory in dbfs
 
 -- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
 
@@ -105,16 +105,5 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
-DESCRIBE HISTORY employees
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees/_delta_log'
-
--- COMMAND ----------
-
--- MAGIC %fs head 'dbfs:/user/hive/warehouse/employees/_delta_log/00000000000000000005.json'
-
--- COMMAND ----------
-
+-- Show the version history of employees, and delta log, and data files in dbfs
 
