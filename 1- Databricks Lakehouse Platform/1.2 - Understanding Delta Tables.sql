@@ -55,6 +55,7 @@ VALUES
 -- COMMAND ----------
 -- List metadata and contents of employees table, database directory and employees table in dbfs
 
+-- COMMAND ----------
 -- MAGIC %md
 -- MAGIC ## Updating Table
 
