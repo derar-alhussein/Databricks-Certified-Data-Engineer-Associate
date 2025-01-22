@@ -32,62 +32,8 @@ SHOW TABLES
 
 -- COMMAND ----------
 
-CREATE VIEW view_apple_phones
-AS  SELECT * 
-    FROM smartphones 
-    WHERE brand = 'Apple';
+-- create a view for Apple phones and query it
 
--- COMMAND ----------
+-- create a temporary view for phone brands and query it
 
-SELECT * FROM view_apple_phones;
-
--- COMMAND ----------
-
-SHOW TABLES;
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC
--- MAGIC ## Creating Temporary Views
-
--- COMMAND ----------
-
-CREATE TEMP VIEW temp_view_phones_brands
-AS  SELECT DISTINCT brand
-    FROM smartphones;
-
-SELECT * FROM temp_view_phones_brands;
-
--- COMMAND ----------
-
-SHOW TABLES;
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC
--- MAGIC ## Creating Global Temporary Views
-
--- COMMAND ----------
-
-CREATE GLOBAL TEMP VIEW global_temp_view_latest_phones
-AS SELECT * FROM smartphones
-    WHERE year > 2020
-    ORDER BY year DESC;
-
--- COMMAND ----------
-
-SELECT * FROM global_temp.global_temp_view_latest_phones;
-
--- COMMAND ----------
-
-SHOW TABLES;
-
--- COMMAND ----------
-
-SHOW TABLES IN global_temp;
-
--- COMMAND ----------
-
-SHOW TABLES
+-- create a global temporary view for phone brands and query it

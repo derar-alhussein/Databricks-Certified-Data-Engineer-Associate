@@ -9,16 +9,11 @@ USE CATALOG hive_metastore
 
 -- COMMAND ----------
 
-DESCRIBE HISTORY employees
+-- list history of employees
 
 -- COMMAND ----------
 
-SELECT * 
-FROM employees VERSION AS OF 4
-
--- COMMAND ----------
-
-SELECT * FROM employees@v4
+-- show contents of employees as of version 4 
 
 -- COMMAND ----------
 
@@ -30,7 +25,7 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
-RESTORE TABLE employees TO VERSION AS OF 5
+-- restore employees to version 5
 
 -- COMMAND ----------
 
@@ -48,24 +43,12 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
+-- 
 DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
-OPTIMIZE employees
-ZORDER BY id
-
--- COMMAND ----------
-
-DESCRIBE DETAIL employees
-
--- COMMAND ----------
-
-DESCRIBE HISTORY employees
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- z-order employees by id and show the outcome using Describe and file contents in dbfs
 
 -- COMMAND ----------
 
@@ -75,46 +58,9 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
-VACUUM employees
+-- vaccum employees and show the outcome using Describe and file contents in dbfs
+-- vacuum employees with retention of 0 hours and show the outcome using Describe and file contents in dbfs
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
-
--- COMMAND ----------
-
-VACUUM employees RETAIN 0 HOURS
-
--- COMMAND ----------
-
-SET spark.databricks.delta.retentionDurationCheck.enabled = false;
-
--- COMMAND ----------
-
-VACUUM employees RETAIN 0 HOURS
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
-
--- COMMAND ----------
-
-SELECT * FROM employees@v1
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC
--- MAGIC ## Dropping Tables
-
--- COMMAND ----------
-
-DROP TABLE employees
-
--- COMMAND ----------
-
-SELECT * FROM employees
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- drop employees and show the outcome using Describe and file contents in dbfs
