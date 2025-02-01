@@ -6,7 +6,7 @@
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC #### Creating a Demo Cluster
+# MAGIC #### Creating a Demo Cluster Mohcine
 # MAGIC
 # MAGIC Create a cluster with the following configurations:
 # MAGIC
