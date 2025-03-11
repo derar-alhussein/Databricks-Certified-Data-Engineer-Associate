@@ -31,7 +31,7 @@ x = 5
 y = 10
 result = x + y
 
---------------------
+print(result)
 
 # COMMAND ----------
 
@@ -42,9 +42,9 @@ result = x + y
 
 # COMMAND ----------
 
-_____________________
-
-SELECT 5 + 10
+# MAGIC %sql
+# MAGIC
+# MAGIC SELECT 5 + 10
 
 # COMMAND ----------
 
@@ -71,7 +71,8 @@ SELECT 5 + 10
 
 # COMMAND ----------
 
---------------------
+# MAGIC %run
+# MAGIC ./helper
 
 # COMMAND ----------
 
