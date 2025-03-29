@@ -13,8 +13,9 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
-SELECT * 
-FROM employees VERSION AS OF 4
+
+SELECT *
+FROM employees VERSION AS OF 3
 
 -- COMMAND ----------
 
