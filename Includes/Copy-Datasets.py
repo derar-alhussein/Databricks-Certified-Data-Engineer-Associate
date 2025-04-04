@@ -102,3 +102,19 @@ def load_new_json_data(all=False):
 
 download_dataset(data_source_uri, dataset_bookstore)
 set_current_catalog(data_catalog)
+
+# COMMAND ----------
+
+# Registers the books table for notebook 3.1
+spark.sql(
+    f"""
+    CREATE EXTERNAL TABLE IF NOT EXISTS books
+    USING PARQUET
+    OPTIONS (
+    header "true",
+    inferSchema "true",
+    recursiveFileLookup "true"
+    )
+    LOCATION '{dataset_bookstore}/orders-streaming'
+    """
+)
