@@ -11,6 +11,16 @@
 
 -- COMMAND ----------
 
+-- MAGIC %fs ls 'dbfs:/mnt/demo-datasets/bookstore/'
+
+-- COMMAND ----------
+
+CREATE TABLE orders
+AS SELECT *
+FROM parquet.`dbfs:/mnt/demo-datasets/bookstore/orders/`
+
+-- COMMAND ----------
+
 SELECT * FROM orders
 
 -- COMMAND ----------
@@ -18,6 +28,18 @@ SELECT * FROM orders
 -- MAGIC %md
 -- MAGIC
 -- MAGIC ## Filtering Arrays
+
+-- COMMAND ----------
+
+SELECT order_id, choosen_books
+FROM 
+(SELECT
+order_id,
+books,
+FILTER (books, i -> i.subtotal >= 35) AS choosen_books
+FROM orders)
+WHERE size(choosen_books) > 0
+LIMIT 10
 
 -- COMMAND ----------
 
@@ -61,6 +83,24 @@ FROM orders;
 
 -- COMMAND ----------
 
+CREATE TABLE customers
+AS SELECT *
+FROM json.`dbfs:/mnt/demo-datasets/bookstore/customers-json/`
+
+-- COMMAND ----------
+
+SELECT email
+FROM customers
+
+-- COMMAND ----------
+
+CREATE OR REPLACE FUNCTION get_domain(email STRING)
+RETURNS STRING
+
+RETURN (split(email, "@")[1])
+
+-- COMMAND ----------
+
 CREATE OR REPLACE FUNCTION get_url(email STRING)
 RETURNS STRING
 
@@ -69,6 +109,11 @@ RETURN concat("https://www.", split(email, "@")[1])
 -- COMMAND ----------
 
 SELECT email, get_url(email) domain
+FROM customers
+
+-- COMMAND ----------
+
+SELECT email, get_domain(email) domain
 FROM customers
 
 -- COMMAND ----------
@@ -98,4 +143,5 @@ FROM customers
 -- COMMAND ----------
 
 DROP FUNCTION get_url;
+DROP FUNCTION get_domain;
 DROP FUNCTION site_type;

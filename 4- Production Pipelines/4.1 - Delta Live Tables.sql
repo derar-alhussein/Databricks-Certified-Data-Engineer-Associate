@@ -28,6 +28,33 @@ SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC import dlt
+-- MAGIC
+-- MAGIC @dlt.table(
+-- MAGIC     name="orders_raw"
+-- MAGIC     comment=" The raw books orders, ingested from orders-raw"
+-- MAGIC )
+-- MAGIC def orders_raw():
+-- MAGIC     return (
+-- MAGIC         spark.readStream.format("cloudFiles")
+-- MAGIC         .option("cloudFiles.format","json")
+-- MAGIC         .option("cloudFiles.inferColumntTypes", "true")
+-- MAGIC         .load(f"{datasets.path}/orders-json-raw")
+-- MAGIC     )
+
+-- COMMAND ----------
+
+CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
+COMMENT "The raw books orders, ingested from orders-raw"
+AS SELECT * FROM cloud_files(
+  "${datasets.path}/orders-json-raw",
+  "json",
+  map("cloudFiles.inferColumnTypes", "true")
+)
+
+-- COMMAND ----------
+
 CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
 COMMENT "The raw books orders, ingested from orders-raw"
 AS SELECT * FROM cloud_files("${datasets.path}/orders-json-raw", "json",
@@ -37,6 +64,18 @@ AS SELECT * FROM cloud_files("${datasets.path}/orders-json-raw", "json",
 
 -- MAGIC %md
 -- MAGIC #### customers
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC @dlt.table(
+-- MAGIC     name="customer"
+-- MAGIC     comment="The customers lookup table, ingested from customer-json"
+-- MAGIC )
+-- MAGIC def customer():
+-- MAGIC     return(
+-- MAGIC         spark.read.format("json").load(f"{datasets.path}/customer-json"
+-- MAGIC     )
 
 -- COMMAND ----------
 
@@ -53,6 +92,48 @@ AS SELECT * FROM json.`${datasets.path}/customers-json`
 -- MAGIC ## Silver Layer Tables
 -- MAGIC
 -- MAGIC #### orders_cleaned
+
+-- COMMAND ----------
+
+-- MAGIC %python
+-- MAGIC import dlt
+-- MAGIC @dlt.table(
+-- MAGIC     name="orders_cleaned"
+-- MAGIC     comment="The cleaned books orders with valid order_id"
+-- MAGIC )
+-- MAGIC @dlt.expect_or_fail("valid_order_number","order_id IS NOT NULL")
+-- MAGIC def orders_cleaned():
+-- MAGIC     orders_raw = dlt.read("orders_raw")
+-- MAGIC     customers = dlt.read("customers")
+-- MAGIC
+-- MAGIC     return (
+-- MAGIC         orders_raw.alias("o")
+-- MAGIC         .join(customers.alias("c"), col("o.customer_id") == col("c.customer_id"), "left")
+-- MAGIC         .select(
+-- MAGIC             col("o.order_id"),
+-- MAGIC             col("o.quantity"),
+-- MAGIC             col("o.customer_id"),
+-- MAGIC             col("c.profile.first_name").alias("f_name"),
+-- MAGIC             col("c.profile.last_name").alias("l_name"),
+-- MAGIC             from_unixtime(col("o.order_timestamp"), "yyyy-MM-dd HH:mm:ss").cast("timestamp").alias("order_timestamp"),
+-- MAGIC             col("o.books"),
+-- MAGIC             col("c.profile.address.country").alias("country")
+-- MAGIC         )
+-- MAGIC     )
+
+-- COMMAND ----------
+
+CREATE OR REFRESH STREAMING LIVE TABLE orders_cleaned (
+  CONSTRAINT valid_order_number EXPECT (order_id IS NOT NULL) ON VIOLATION DROP ROW
+)
+COMMENT "The cleaned books orders with valid order_id"
+AS
+  SELECT order_id, quantity, o.customer_id, c.profile:first_name as f_name, c.profile:last_name as l_name,
+         cast(from_unixtime(order_timestamp, 'yyyy-MM-dd HH:mm:ss') AS timestamp) order_timestamp, o.books,
+         c.profile:address:country as country
+    FROM STREAM(LIVE.orders_raw) o
+    LEFT JOIN LIVE.customers c
+    ON o.customer_id = c.customer_id
 
 -- COMMAND ----------
 

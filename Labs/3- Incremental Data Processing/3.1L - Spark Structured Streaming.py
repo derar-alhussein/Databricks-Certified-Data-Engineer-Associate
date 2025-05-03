@@ -36,9 +36,9 @@ schema_location = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
 
 (spark
   .readStream
-  .___________________
-  .___________________
-  .____________________
+  .format("cloudFiles")
+  .option("cloudFiles.format","json")
+  .option("cloudFiles.schemaLocation",schema_location)
   .load(dataset_source)
   .createOrReplaceTempView("enrollments_tmp_vw"))
 

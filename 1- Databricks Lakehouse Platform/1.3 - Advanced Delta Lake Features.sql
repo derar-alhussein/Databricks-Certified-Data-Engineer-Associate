@@ -58,6 +58,40 @@ ZORDER BY id
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC # **VARIANTS**
+
+-- COMMAND ----------
+
+OPTIMIZE employees
+
+
+-- COMMAND ----------
+
+OPTIMIZE employees
+WHERE year = 2025;
+
+-- COMMAND ----------
+
+OPTIMIZE employees
+WHERE year = 2025
+ZORDER BY (id);
+
+-- COMMAND ----------
+
+OPTIMIZE employees FULL
+
+-- COMMAND ----------
+
+OPTIMIZE employees
+OPTIONS (max_file_size = '268435456');
+
+-- COMMAND ----------
+
+OPTIMIZE delta.`/hive/warehouse/employees` ZORDER BY (id);
+
+-- COMMAND ----------
+
 DESCRIBE DETAIL employees
 
 -- COMMAND ----------
@@ -93,6 +127,10 @@ SET spark.databricks.delta.retentionDurationCheck.enabled = false;
 -- COMMAND ----------
 
 VACUUM employees RETAIN 0 HOURS
+
+-- COMMAND ----------
+
+VACUUM employees DRY RUN -- to get the list of files to be deleted
 
 -- COMMAND ----------
 

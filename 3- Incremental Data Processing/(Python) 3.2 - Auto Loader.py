@@ -28,19 +28,6 @@ display(files)
 
 # COMMAND ----------
 
-(
-    spark.readStream
-    .format("cloudFiles")
-    .option("cloudFiles.format","json")
-    .option("cloudFiles.schemaLocation", "dbfs:/mnt/demo/orders_checkpoint")
-    .load(f"{dataset_bookstore}/orders-raw")
-    .writeStream
-    .option("checkpointLocation","dfbs:/mnt/demo/orders_checkpoint")
-    .table("orders_updates")
-)
-
-# COMMAND ----------
-
 (spark.readStream
  .format("cloudFiles")
  .option("cloudFiles.format", "json")
@@ -49,19 +36,6 @@ display(files)
  .writeStream
  .option("checkpointLocation","dbfs:/mnt/demo/orders_checkpoint")
  .table("orders_updates")}))
-
-# COMMAND ----------
-
-(
-    spark.readStream
-    .format("cloudFiles")
-    .option("cloudFiles.format","parquet")
-    .option("cloudFiles.schemaLocation", "dfbs:/mnt/demo/orders_checkpoint")
-    .load(f"{dataset_bookstore}/orders-raw")
-    .writeStream
-    .option("checkpointLocation","dbfs:/mnt/demo/orders_checkpoint")
-    .table("orders_updates")
-)
 
 # COMMAND ----------
 
