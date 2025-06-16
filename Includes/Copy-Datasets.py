@@ -24,11 +24,25 @@ def download_dataset(source, target):
 # COMMAND ----------
 
 data_source_uri = "s3://dalhussein-courses/datasets/bookstore/v1/"
-dataset_bookstore = 'dbfs:/mnt/demo-datasets/bookstore'
-data_catalog = 'hive_metastore'
-spark.conf.set(f"dataset.bookstore", dataset_bookstore)
-spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")
-spark.conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
+
+catalogs = spark.sql("SHOW CATALOGS").collect()
+hive_exists = any(row.catalog == 'hive_metastore' for row in catalogs)
+if hive_exists:
+    data_catalog = 'hive_metastore'
+    dataset_bookstore = 'dbfs:/mnt/demo-datasets/bookstore'
+
+    try:
+        spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")
+        spark.conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
+    except:
+        pass
+else:
+    data_catalog = spark.sql("SELECT current_catalog()").collect()[0][0]
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS {data_catalog}.default.bookstore_dataset")
+    dataset_bookstore = f"/Volumes/{data_catalog}/default/bookstore_dataset"
+    checkpoints_bookstore = f"/Volumes/{data_catalog}/default/bookstore_dataset"
+
+print(f"Data Catalog: {data_catalog}")
 
 # COMMAND ----------
 

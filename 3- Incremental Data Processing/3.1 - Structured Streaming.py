@@ -31,7 +31,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM books_streaming_tmp_vw
+# MAGIC --SELECT * FROM books_streaming_tmp_vw
 
 # COMMAND ----------
 
@@ -41,9 +41,9 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT author, count(book_id) AS total_books
-# MAGIC FROM books_streaming_tmp_vw
-# MAGIC GROUP BY author
+# MAGIC --SELECT author, count(book_id) AS total_books
+# MAGIC --FROM books_streaming_tmp_vw
+# MAGIC --GROUP BY author
 
 # COMMAND ----------
 
@@ -54,9 +54,9 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC  SELECT * 
-# MAGIC  FROM books_streaming_tmp_vw
-# MAGIC  ORDER BY author
+# MAGIC --SELECT * 
+# MAGIC --FROM books_streaming_tmp_vw
+# MAGIC --ORDER BY author
 
 # COMMAND ----------
 
@@ -131,3 +131,7 @@
 # MAGIC %sql
 # MAGIC SELECT *
 # MAGIC FROM author_counts
+
+# COMMAND ----------
+
+
