@@ -5,7 +5,7 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+--USE CATALOG hive_metastore
 
 -- COMMAND ----------
 
@@ -30,7 +30,11 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
-RESTORE TABLE employees TO VERSION AS OF 5
+DESCRIBE HISTORY employees
+
+-- COMMAND ----------
+
+RESTORE TABLE employees TO VERSION AS OF 6
 
 -- COMMAND ----------
 
@@ -52,6 +56,7 @@ DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
+-- Note: The following command has no effect in this case, as an optimization operation was automatically executed on the table in version 6.
 OPTIMIZE employees
 ZORDER BY id
 
@@ -65,7 +70,7 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
@@ -79,7 +84,7 @@ VACUUM employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
@@ -87,7 +92,11 @@ VACUUM employees RETAIN 0 HOURS
 
 -- COMMAND ----------
 
-SET spark.databricks.delta.retentionDurationCheck.enabled = false;
+-- Note: The retentionDurationCheck configuration is not available on Serverless compute
+-- SET spark.databricks.delta.retentionDurationCheck.enabled = false;
+
+-- Instead, use table properties
+ALTER TABLE employees SET TBLPROPERTIES ('delta.deletedFileRetentionDuration'='interval 0 hours')
 
 -- COMMAND ----------
 
@@ -95,10 +104,11 @@ VACUUM employees RETAIN 0 HOURS
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
+-- Note: You may still see results due to a cached version of the table in the serverless compute environment
 SELECT * FROM employees@v1
 
 -- COMMAND ----------
@@ -117,4 +127,4 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'

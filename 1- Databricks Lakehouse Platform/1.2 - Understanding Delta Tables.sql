@@ -4,7 +4,7 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+--USE CATALOG hive_metastore
 
 -- COMMAND ----------
 
@@ -69,7 +69,7 @@ DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
@@ -88,7 +88,7 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
@@ -109,11 +109,11 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees/_delta_log'
+--%fs ls '/path/to/employees/_delta_log'
 
 -- COMMAND ----------
 
--- MAGIC %fs head 'dbfs:/user/hive/warehouse/employees/_delta_log/00000000000000000005.json'
+--%fs head '/path/to/employees/_delta_log/00000000000000000005.json'
 
 -- COMMAND ----------
 
