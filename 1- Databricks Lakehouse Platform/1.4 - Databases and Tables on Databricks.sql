@@ -1,12 +1,10 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC To create external tables in Databricks Free Edition, you first need to set up a connection to an Amazon S3 bucket to store the table data.
+-- MAGIC To create external tables in Databricks Express or Free Edition, you first need to set up a connection to an Amazon S3 bucket to store the table data.
 -- MAGIC
 -- MAGIC - Step 1: Create an S3 bucket in your AWS account
--- MAGIC - Step 2: Create an [IAM role and IAM policy](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-1-create-an-iam-role) in the same account as your S3 bucket 
--- MAGIC - Step 3: Create a [Storage Credential](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-2-give-databricks-the-iam-role-details) named "lakehouse_credential" in this Databricks workspace
--- MAGIC - Step 4: Update the [IAM role trusted policy](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-3-update-the-iam-role-trust-relationship-policy) of your IAM role
--- MAGIC - Step 5: In the cells below, replace <BUCKET> with the name of your S3 bucket, and then proceed to run them.
+-- MAGIC - Step 2: Configure [External Location](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/external-locations#-option-1-create-an-external-location-for-an-s3-bucket-using-an-aws-cloudformation-template) object in this workspace to connect your S3 bucket to Databricks
+-- MAGIC - Step 3: In the cells below, replace _&lt;BUCKET&gt;_ with the name of your S3 bucket, and then proceed to run them.
 
 -- COMMAND ----------
 
