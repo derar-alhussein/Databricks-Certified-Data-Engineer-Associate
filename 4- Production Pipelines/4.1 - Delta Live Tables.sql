@@ -14,7 +14,7 @@
 
 -- COMMAND ----------
 
-SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
+--CREATE WIDGET TEXT datasets_path DEFAULT "/Volumes/workspace/default/bookstore_dataset"
 
 -- COMMAND ----------
 
@@ -30,8 +30,9 @@ SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
 
 CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
 COMMENT "The raw books orders, ingested from orders-raw"
-AS SELECT * FROM cloud_files("${datasets.path}/orders-json-raw", "json",
-                             map("cloudFiles.inferColumnTypes", "true"))
+AS SELECT * FROM cloud_files("${datasets_path}/orders-json-raw", "json",
+                              map("cloudFiles.inferColumnTypes", "true",
+                                  "cloudFiles.schemaLocation", "${datasets_path}/bookstore_checkpoints/dlt/orders_raw"));
 
 -- COMMAND ----------
 
@@ -42,7 +43,7 @@ AS SELECT * FROM cloud_files("${datasets.path}/orders-json-raw", "json",
 
 CREATE OR REFRESH LIVE TABLE customers
 COMMENT "The customers lookup table, ingested from customers-json"
-AS SELECT * FROM json.`${datasets.path}/customers-json`
+AS SELECT * FROM json.`${datasets_path}/customers-json`
 
 -- COMMAND ----------
 

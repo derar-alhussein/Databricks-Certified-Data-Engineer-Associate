@@ -13,7 +13,7 @@
 
 # MAGIC %md
 # MAGIC
-# MAGIC ## Exploring The Source dDirectory
+# MAGIC ## Exploring The Source Directory
 
 # COMMAND ----------
 
@@ -31,7 +31,7 @@ display(files)
 (spark.readStream
     .format("cloudFiles")
     .option("cloudFiles.format", "parquet")
-    .option("cloudFiles.schemaLocation", "dbfs:/mnt/demo/checkpoints/orders_raw")
+    .option("cloudFiles.schemaLocation", f"{checkpoints_bookstore}/orders_raw")
     .load(f"{dataset_bookstore}/orders-raw")
     .createOrReplaceTempView("orders_raw_temp"))
 
@@ -51,8 +51,8 @@ display(files)
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT * FROM orders_tmp
+orders_tmp_df = spark.sql("SELECT * FROM orders_tmp")
+display(orders_tmp_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/orders_{time.time()}")
 
 # COMMAND ----------
 
@@ -61,12 +61,18 @@ display(files)
 
 # COMMAND ----------
 
-(spark.table("orders_tmp")
-      .writeStream
-      .format("delta")
-      .option("checkpointLocation", "dbfs:/mnt/demo/checkpoints/orders_bronze")
-      .outputMode("append")
-      .table("orders_bronze"))
+def process_bronze():
+      query = (spark.table("orders_tmp")
+                    .writeStream
+                    .format("delta")
+                    .option("checkpointLocation", f"{checkpoints_bookstore}/orders_bronze")
+                    .outputMode("append")
+                    .trigger(availableNow=True) # we use trigger AvailableNow as Trigger type ProcessingTime is not supported for Serverless compute.
+                    .table("orders_bronze"))
+      
+      query.awaitTermination()
+
+process_bronze()
 
 # COMMAND ----------
 
@@ -76,6 +82,8 @@ display(files)
 # COMMAND ----------
 
 load_new_data()
+
+process_bronze() # Rerun the Bronze layer process to ingest the new data
 
 # COMMAND ----------
 
@@ -119,12 +127,18 @@ load_new_data()
 
 # COMMAND ----------
 
-(spark.table("orders_enriched_tmp")
-      .writeStream
-      .format("delta")
-      .option("checkpointLocation", "dbfs:/mnt/demo/checkpoints/orders_silver")
-      .outputMode("append")
-      .table("orders_silver"))
+def process_silver():
+      query = (spark.table("orders_enriched_tmp")
+                    .writeStream
+                    .format("delta")
+                    .option("checkpointLocation", f"{checkpoints_bookstore}/orders_silver")
+                    .outputMode("append")
+                    .trigger(availableNow=True) # we use trigger AvailableNow as Trigger type ProcessingTime is not supported for Serverless compute.
+                    .table("orders_silver"))
+      
+      query.awaitTermination()
+
+process_silver()
 
 # COMMAND ----------
 
@@ -139,6 +153,9 @@ load_new_data()
 # COMMAND ----------
 
 load_new_data()
+
+process_bronze()
+process_silver()
 
 # COMMAND ----------
 
@@ -162,13 +179,18 @@ load_new_data()
 
 # COMMAND ----------
 
-(spark.table("daily_customer_books_tmp")
-      .writeStream
-      .format("delta")
-      .outputMode("complete")
-      .option("checkpointLocation", "dbfs:/mnt/demo/checkpoints/daily_customer_books")
-      .trigger(availableNow=True)
-      .table("daily_customer_books"))
+def process_gold():
+      query = (spark.table("daily_customer_books_tmp")
+                    .writeStream
+                    .format("delta")
+                    .outputMode("complete")
+                    .option("checkpointLocation", f"{checkpoints_bookstore}/daily_customer_books")
+                    .trigger(availableNow=True)
+                    .table("daily_customer_books"))
+      
+      query.awaitTermination()
+
+process_gold()
 
 # COMMAND ----------
 
@@ -178,6 +200,10 @@ load_new_data()
 # COMMAND ----------
 
 load_new_data()
+
+process_bronze()
+process_silver()
+process_gold()
 
 # COMMAND ----------
 

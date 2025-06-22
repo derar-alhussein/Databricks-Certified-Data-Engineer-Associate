@@ -1,5 +1,5 @@
 -- Databricks notebook source
-SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
+--CREATE WIDGET TEXT datasets_path DEFAULT "/Volumes/workspace/default/bookstore_dataset"
 
 -- COMMAND ----------
 
@@ -13,7 +13,9 @@ SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
 
 CREATE OR REFRESH STREAMING LIVE TABLE books_bronze
 COMMENT "The raw books data, ingested from CDC feed"
-AS SELECT * FROM cloud_files("${datasets.path}/books-cdc", "json")
+AS SELECT * FROM cloud_files("${datasets_path}/books-cdc", "json",
+                             map("cloudFiles.inferColumnTypes", "true",
+                                  "cloudFiles.schemaLocation", "${datasets_path}/bookstore_checkpoints/dlt/books_bronze"))
 
 -- COMMAND ----------
 
@@ -63,3 +65,7 @@ CREATE LIVE VIEW books_sales
       FROM LIVE.orders_cleaned) o
     INNER JOIN LIVE.books_silver b
     ON o.book.book_id = b.book_id;
+
+-- COMMAND ----------
+
+

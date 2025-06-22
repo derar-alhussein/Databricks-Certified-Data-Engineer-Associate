@@ -1,4 +1,8 @@
 # Databricks notebook source
+import time
+
+# COMMAND ----------
+
 def path_exists(path):
   try:
     dbutils.fs.ls(path)
@@ -25,11 +29,21 @@ def download_dataset(source, target):
 
 data_source_uri = "s3://dalhussein-courses/datasets/bookstore/v1/"
 
+#db_name = "bookstore_eng_associate"
+db_name = "default"
+
 catalogs = spark.sql("SHOW CATALOGS").collect()
 hive_exists = any(row.catalog == 'hive_metastore' for row in catalogs)
 if hive_exists:
     data_catalog = 'hive_metastore'
+    #dataset_bookstore = 'dbfs:/{db_name}/dataset'
+    #checkpoints_bookstore = 'dbfs:/{db_name}/checkpoints'
     dataset_bookstore = 'dbfs:/mnt/demo-datasets/bookstore'
+    checkpoints_bookstore = 'dbfs:/mnt/demo/checkpoints'
+
+    spark.sql(f"USE CATALOG {data_catalog}")
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
+    spark.sql(f"USE SCHEMA {db_name}")
 
     try:
         spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")
@@ -38,11 +52,22 @@ if hive_exists:
         pass
 else:
     data_catalog = spark.sql("SELECT current_catalog()").collect()[0][0]
-    spark.sql(f"CREATE VOLUME IF NOT EXISTS {data_catalog}.default.bookstore_dataset")
-    dataset_bookstore = f"/Volumes/{data_catalog}/default/bookstore_dataset"
-    checkpoints_bookstore = f"/Volumes/{data_catalog}/default/bookstore_dataset"
+    #dataset_volume_name = "dataset"
+    #checkpoints_volume_name = "checkpoints"
+    dataset_volume_name = "bookstore_dataset"
+    checkpoints_volume_name = "bookstore_checkpoints"
+    dataset_bookstore = f"/Volumes/{data_catalog}/{db_name}/{dataset_volume_name}"
+    checkpoints_bookstore = f"/Volumes/{data_catalog}/{db_name}/{checkpoints_volume_name}"
+
+    spark.sql(f"USE CATALOG {data_catalog}")
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
+    spark.sql(f"USE SCHEMA {db_name}")
+
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS {dataset_volume_name}")
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS {checkpoints_volume_name}")
 
 print(f"Data Catalog: {data_catalog}")
+#print(f"Schema: {db_name}")
 
 # COMMAND ----------
 
