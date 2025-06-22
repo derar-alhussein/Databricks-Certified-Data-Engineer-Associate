@@ -30,20 +30,25 @@
 
 # COMMAND ----------
 
-dataset_source = f"{dataset_school}/enrollments-json-raw"
-bronze_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/bronze"
-schema_location = bronze_checkpoint_path
+def process_bronze():
+  dataset_source = f"{dataset_school}/enrollments-json-raw"
+  bronze_checkpoint_path = f"{checkpoints_school}/bronze"
+  schema_location = bronze_checkpoint_path
 
-(spark.readStream
-        .___________________
-        .___________________
-        .___________________
-        .load(dataset_source)
-      .writeStream
-        .___________________
-        .___________________
-        .table("bronze")
-)
+  (spark.readStream
+          .___________________
+          .___________________
+          .___________________
+          .load(dataset_source)
+        .writeStream
+          .___________________
+          .___________________
+          .trigger(availableNow=True)
+          .table("bronze")
+          .awaitTermination()
+  )
+
+process_bronze()
 
 # COMMAND ----------
 
@@ -82,14 +87,19 @@ schema_location = bronze_checkpoint_path
 
 # COMMAND ----------
 
-silver_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/silver"
+def process_silver():
+        silver_checkpoint_path = f"{checkpoints_school}/silver"
 
-(spark.table("bronze_cleaned_tmp")
-        .___________________
-        .___________________
-        .___________________
-        .table("silver")
-)
+        (spark.table("bronze_cleaned_tmp")
+                .___________________
+                .___________________
+                .___________________
+                .trigger(availableNow=True)
+                .table("silver")
+                .awaitTermination()
+        )
+
+process_silver()
 
 # COMMAND ----------
 
@@ -125,13 +135,20 @@ silver_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/silver"
 
 # COMMAND ----------
 
-gold_checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/gold_enrollments_stats"
+def process_gold():
+  gold_checkpoint_path = f"{checkpoints_school}/gold_enrollments_stats"
 
-query = (spark.table("enrollments_per_student_tmp_vw")
-              .writeStream
-              .___________________
-              .___________________
-              .table("gold_enrollments_stats"))
+  query = (spark.table("enrollments_per_student_tmp_vw")
+                .writeStream
+                .___________________
+                .___________________
+                .trigger(availableNow=True)
+                .table("gold_enrollments_stats")
+                )
+  
+  query.awaitTermination()
+
+process_gold()
 
 # COMMAND ----------
 
@@ -146,30 +163,22 @@ query = (spark.table("enrollments_per_student_tmp_vw")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Run the below cell to land new a json file of enrollments data
+# MAGIC Run the below cell to land new a json file of enrollments data, and reprocess it through all pipeline layers
 
 # COMMAND ----------
 
 load_new_json_data()
 
+process_bronze()
+process_silver()
+process_gold()
+
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Wait for the new data to be propagated, and then run the below query to verify that the statistics have been updated in the table **gold_enrollments_stats**
+# MAGIC Run the below query to verify that the statistics have been updated in the table **gold_enrollments_stats**
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC SELECT * FROM gold_enrollments_stats
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC Finally, run the below cell for canceling the above streaming queries
-
-# COMMAND ----------
-
-for s in spark.streams.active:
-    print("Stopping stream: " + s.id)
-    s.stop()
-    s.awaitTermination()

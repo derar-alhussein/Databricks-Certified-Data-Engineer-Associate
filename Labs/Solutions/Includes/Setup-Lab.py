@@ -1,11 +1,43 @@
 # Databricks notebook source
 data_source_uri = "s3://dalhussein-courses/datasets/school/v1/"
-dataset_school = 'dbfs:/mnt/DE-Associate/datasets/school'
-checkpoint_path = 'dbfs:/mnt/DE-Associate/checkpoints/school'
-dlt_path = 'dbfs:/mnt/DE-Associate/dlt/school'
 db_name = 'DE_Associate_School'
 dlt_db_name = 'DE_Associate_School_DLT'
-spark.conf.set(f"dataset.school", dataset_school)
+
+catalogs = spark.sql("SHOW CATALOGS").collect()
+hive_exists = any(row.catalog == 'hive_metastore' for row in catalogs)
+if hive_exists:
+    data_catalog = 'hive_metastore'
+    dataset_school = 'dbfs:/mnt/DE-Associate/datasets/school'
+    checkpoints_school = 'dbfs:/mnt/DE-Associate/checkpoints/school'
+    dlt_path = 'dbfs:/mnt/DE-Associate/dlt/school'
+
+    spark.sql(f"USE CATALOG {data_catalog}")
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
+    spark.sql(f"USE SCHEMA {db_name}")
+
+    try:
+        spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")
+        spark.conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
+    except:
+        pass
+else:
+    data_catalog = spark.sql("SELECT current_catalog()").collect()[0][0]
+    dataset_volume_name = "dataset"
+    checkpoints_volume_name = "checkpoints"
+    dataset_school = f"/Volumes/{data_catalog}/{db_name}/{dataset_volume_name}"
+    checkpoints_school = f"/Volumes/{data_catalog}/{db_name}/{checkpoints_volume_name}"
+
+    spark.sql(f"USE CATALOG {data_catalog}")
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
+    spark.sql(f"USE SCHEMA {db_name}")
+
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS {dataset_volume_name}")
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS {checkpoints_volume_name}")
+
+spark.sql(f"CREATE SCHEMA IF NOT EXISTS {dlt_db_name}")
+
+print(f"Data catalog for the hands-on labs: {data_catalog}")
+print(f"Schema: {db_name}")
 
 # COMMAND ----------
 
@@ -68,14 +100,6 @@ def get_index(dir):
 
 # COMMAND ----------
 
-def set_current_schema(schema_name, catalog_name='hive_metastore'):
-    spark.sql(f"USE CATALOG {catalog_name}")
-    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
-    spark.sql(f"USE {schema_name}")
-    print(f"Schema for the hands-on labs: {catalog_name}.{schema_name}")
-
-# COMMAND ----------
-
 # Structured Streaming
 streaming_dir = f"{dataset_school}/enrollments-streaming"
 raw_dir = f"{dataset_school}/enrollments-raw"
@@ -132,4 +156,3 @@ def load_new_json_data(all=False):
 # COMMAND ----------
 
 download_dataset(data_source_uri, dataset_school)
-set_current_schema(db_name)

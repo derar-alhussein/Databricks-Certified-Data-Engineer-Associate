@@ -32,7 +32,7 @@ CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
 COMMENT "The raw books orders, ingested from orders-raw"
 AS SELECT * FROM cloud_files("${datasets_path}/orders-json-raw", "json",
                               map("cloudFiles.inferColumnTypes", "true",
-                                  "cloudFiles.schemaLocation", "${datasets_path}/bookstore_checkpoints/dlt/orders_raw"));
+                                  "cloudFiles.schemaLocation", "/Volumes/workspace/default/bookstore_checkpoints/dlt/orders_raw"));
 
 -- COMMAND ----------
 

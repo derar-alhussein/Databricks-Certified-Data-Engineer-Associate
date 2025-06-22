@@ -18,32 +18,33 @@
 
 -- COMMAND ----------
 
-SET datasets.path=dbfs:/mnt/DE-Associate/datasets/school;
+--CREATE WIDGET TEXT datasets_path DEFAULT "/Volumes/workspace/DE_Associate_School/dataset"
 
 -- COMMAND ----------
 
 -- MAGIC %md
 -- MAGIC #### Q1- Declaring Bronze Tables
 -- MAGIC
--- MAGIC Declare a streaming live table, **`enrollments_bronze`**, that ingests JSON data incrementally using Auto Loader from the directory **"${datasets.path}/enrollments-json-raw"**
+-- MAGIC Declare a streaming live table, **`enrollments_bronze`**, that ingests JSON data incrementally using Auto Loader from the directory **"${datasets_path}/enrollments-json-raw"**
 
 -- COMMAND ----------
 
 -- ANSWER
 CREATE OR REFRESH STREAMING LIVE TABLE enrollments_bronze
-AS SELECT * FROM cloud_files("${datasets.path}/enrollments-json-raw", "json",
-                             map("cloudFiles.inferColumnTypes", "true"))
+AS SELECT * FROM cloud_files("${datasets_path}/enrollments-json-raw", "json",
+                             map("cloudFiles.inferColumnTypes", "true",
+                                  "cloudFiles.schemaLocation", "/Volumes/workspace/DE_Associate_School/checkpoints/dlt/orders_raw"))
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Declare a live table, **`students_bronze`**, that load data directly from JSON files in the directory **"${datasets.path}/students-json"**
+-- MAGIC Declare a live table, **`students_bronze`**, that load data directly from JSON files in the directory **"${datasets_path}/students-json"**
 
 -- COMMAND ----------
 
 -- ANSWER
 CREATE OR REFRESH LIVE TABLE students_bronze
-AS SELECT * FROM json.`${datasets.path}/students-json`
+AS SELECT * FROM json.`${datasets_path}/students-json`
 
 -- COMMAND ----------
 
@@ -108,17 +109,11 @@ AS
 -- MAGIC | Setting | Instructions |
 -- MAGIC |--|--|
 -- MAGIC | Pipeline name | School DLT |
--- MAGIC | Product edition | Choose **Advanced** |
 -- MAGIC | Pipeline mode | Choose **Triggered** |
 -- MAGIC | Source code | Use the navigator to select this current notebook (4.1L - Delta Live Tables) |
--- MAGIC | Storage location | dbfs:/mnt/DE-Associate/dlt/school |
--- MAGIC | Target schema | DE_Associate_School_DLT |
+-- MAGIC | Schema | DE_Associate_School_DLT |
 -- MAGIC | Cluster policy | Leave it **None**|
--- MAGIC | Cluster mode | Choose **Fixed size**|
--- MAGIC | Workers | Enter **0**|
--- MAGIC | Photon Acceleration | Leave it unchecked |
--- MAGIC | Advanced Configuration | Click **Add Configuration** and enter:<br> - Key: **datasets.path** <br> - Value: **dbfs:/mnt/DE-Associate/datasets/school** |
--- MAGIC | Channel | Choose **Current**|
+-- MAGIC | Advanced Configuration | Click **Add Configuration** and enter:<br> - Key: **datasets_path** <br> - Value: **/Volumes/workspace/DE_Associate_School/dataset** |
 -- MAGIC
 -- MAGIC Finally, click **Create**.
 

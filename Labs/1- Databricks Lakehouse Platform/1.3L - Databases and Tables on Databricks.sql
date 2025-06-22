@@ -5,13 +5,31 @@
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC #### Setting the default catalog
+-- MAGIC To create external tables in Databricks Free Edition, you first need to set up a connection to an Amazon S3 bucket to store the table data.
 -- MAGIC
--- MAGIC Run the cell below to set the current catalog to **hive_metastore**
+-- MAGIC - Step 1: Create an S3 bucket in your AWS account
+-- MAGIC - Step 2: Create an [IAM role and IAM policy](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-1-create-an-iam-role) in the same account as your S3 bucket 
+-- MAGIC - Step 3: Create a [Storage Credential](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-2-give-databricks-the-iam-role-details) named "lakehouse_credential" in this Databricks workspace
+-- MAGIC - Step 4: Update the [IAM role trusted policy](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-3-update-the-iam-role-trust-relationship-policy) of your IAM role
+-- MAGIC - Step 5: In the cells below, replace <BUCKET> with the name of your S3 bucket, and then proceed to run them.
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore;
+-- MAGIC %md
+-- MAGIC #### Setting the default catalog
+-- MAGIC
+-- MAGIC Run the cell below to create and set the current catalog
+
+-- COMMAND ----------
+
+CREATE EXTERNAL LOCATION IF NOT EXISTS lakehouse_custom_location URL 's3://<BUCKET>'
+     WITH (CREDENTIAL lakehouse_credential)
+     COMMENT 'my custom storage';
+
+CREATE CATALOG IF NOT EXISTS demo_cat
+MANAGED LOCATION 's3://<BUCKET>';
+
+USE CATALOG demo_cat;
 
 -- COMMAND ----------
 
@@ -49,7 +67,7 @@ DESCRIBE EXTENDED movies_managed
 -- MAGIC #### Q2 - Creating external table
 -- MAGIC
 -- MAGIC In the default database, create an external Delta table named **actors_external**, and located under the directory:
--- MAGIC **dbfs:/mnt/demo/actors_external**
+-- MAGIC **s3://&lt;BUCKET&gt;/external_storage/actors_external**
 -- MAGIC
 -- MAGIC The schema for the table:
 -- MAGIC
@@ -66,11 +84,11 @@ DESCRIBE EXTENDED movies_managed
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC #### Q4- Checking table metadata
+-- MAGIC #### Q3- Checking table metadata
 -- MAGIC
 -- MAGIC Review the extended metadata information of the table, and verify that:
 -- MAGIC 1. The table type is External
--- MAGIC 1. The table is located under the directory: **dbfs:/mnt/demo/actors_external**
+-- MAGIC 1. The table is located under the directory: **s3://&lt;BUCKET&gt;/external_storage/actors_external**
 
 -- COMMAND ----------
 
@@ -79,7 +97,7 @@ DESCRIBE EXTENDED actors_external
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC #### Q3- Dropping manged table
+-- MAGIC #### Q4- Dropping manged table
 -- MAGIC
 -- MAGIC Drop the manged table **movies_managed** 
 
@@ -132,18 +150,6 @@ DROP TABLE actors_external
 
 -- MAGIC %md
 -- MAGIC
--- MAGIC Review the extended metadata information of the database, and verify that the database is located under the default hive directory.
--- MAGIC
--- MAGIC Note that the database folder has the extenstion **.db**
-
--- COMMAND ----------
-
-DESCRIBE DATABASE EXTENDED db_cinema
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC
 -- MAGIC Use the new schema to create the below **movies** table
 
 -- COMMAND ----------
@@ -159,7 +165,7 @@ CREATE TABLE movies
 -- MAGIC %md
 -- MAGIC #### Q6- Creating new schema in custom location
 -- MAGIC
--- MAGIC Create a new schema named **cinema_custom** in the directory: **dbfs:/Shared/schemas/cinema_custom.db**
+-- MAGIC Create a new schema named **cinema_custom** in the directory: **s3://&lt;BUCKET&gt;/custom_schemas**
 
 -- COMMAND ----------
 

@@ -1,19 +1,19 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC ## Managed Tables
+-- MAGIC To create external tables in Databricks Free Edition, you first need to set up a connection to an Amazon S3 bucket to store the table data.
+-- MAGIC
+-- MAGIC - Step 1: Create an S3 bucket in your AWS account
+-- MAGIC - Step 2: Create an [IAM role and IAM policy](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-1-create-an-iam-role) in the same account as your S3 bucket 
+-- MAGIC - Step 3: Create a [Storage Credential](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-2-give-databricks-the-iam-role-details) named "lakehouse_credential" in this Databricks workspace
+-- MAGIC - Step 4: Update the [IAM role trusted policy](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-3-update-the-iam-role-trust-relationship-policy) of your IAM role
+-- MAGIC - Step 5: In the cells below, replace <BUCKET> with the name of your S3 bucket, and then proceed to run them.
 
 -- COMMAND ----------
 
--- To create external tables on Databricks Free Edition, you must first configure a connection to an S3 bucket:
+-- MAGIC %md
+-- MAGIC ## Managed Tables
 
--- Step 1: Create an S3 bucket in your AWS account
--- Step 2: Create an IAM role and IAM policy in the same account as your S3 bucket 
--- (See: https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-1-create-an-iam-role)
--- Step 3: Create a Storage Credential named "lakehouse_credential" from Catalog -> External Data -> Credentials
--- (See: https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-2-give-databricks-the-iam-role-details)
--- Step 4: Update the IAM role trusted policy of your IAM role
--- (See: https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/storage-credentials#step-3-update-the-iam-role-trust-relationship-policy)
--- Step 5: In the following statements, replace <BUCKET> with the name of your S3 bucket, and then proceed to run them.
+-- COMMAND ----------
 
 CREATE EXTERNAL LOCATION IF NOT EXISTS lakehouse_custom_location URL 's3://<BUCKET>'
      WITH (CREDENTIAL lakehouse_credential)

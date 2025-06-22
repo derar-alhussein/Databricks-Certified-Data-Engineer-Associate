@@ -111,7 +111,3 @@ RETURN CASE
 -- ANSWER
 SELECT student_id, gpa, get_letter_grade(gpa) as letter_grade
 FROM students
-
--- COMMAND ----------
-
-

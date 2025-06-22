@@ -31,7 +31,7 @@
 # COMMAND ----------
 
 dataset_source = f"{dataset_school}/enrollments-json-raw"
-schema_location = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
+schema_location = f"{checkpoints_school}/enrollments_stats"
 
 # ANSWER
 (spark.readStream
@@ -63,18 +63,20 @@ schema_location = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
 # MAGIC %md
 # MAGIC #### Q3 - Writing stream data
 # MAGIC
-# MAGIC Stream the aggregated data from the **`enrollments_per_student_tmp_vw`** view to a Delta table called **`enrollments_stats`**.
+# MAGIC Stream the aggregated data from the **`enrollments_per_student_tmp_vw`** view to a Delta table called **`enrollments_stats`** in incremental triggered mode.
 
 # COMMAND ----------
 
-checkpoint_path = "dbfs:/mnt/DE-Associate/checkpoints/school/enrollments_stats"
+checkpoint_path = f"{checkpoints_school}/enrollments_stats"
 
 # ANSWER
 query = (spark.table("enrollments_per_student_tmp_vw")
               .writeStream
               .option("checkpointLocation", checkpoint_path)
               .outputMode("complete")
+              .trigger(availableNow=True)
               .table("enrollments_stats")
+              .awaitTermination()
         )
 
 # COMMAND ----------
@@ -99,16 +101,9 @@ load_new_json_data()
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC Verify that the statistics have been updated in the table **enrollments_stats**
+# MAGIC Rerun your stream write process and verify that the statistics have been updated in the table **enrollments_stats**
 
 # COMMAND ----------
 
 # MAGIC %sql
 # MAGIC SELECT * FROM enrollments_stats
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC #### Q4 - Canceling streaming query
-# MAGIC
-# MAGIC Finally, cancel the above streaming query
