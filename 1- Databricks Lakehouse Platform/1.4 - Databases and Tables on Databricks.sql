@@ -13,10 +13,6 @@
 
 -- COMMAND ----------
 
-CREATE EXTERNAL LOCATION IF NOT EXISTS lakehouse_custom_location URL 's3://<BUCKET>'
-     WITH (CREDENTIAL lakehouse_credential)
-     COMMENT 'my custom storage';
-
 CREATE CATALOG IF NOT EXISTS demo_cat
 MANAGED LOCATION 's3://<BUCKET>';
 
