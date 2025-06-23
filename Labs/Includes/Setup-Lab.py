@@ -1,4 +1,50 @@
 # Databricks notebook source
+import time
+
+# COMMAND ----------
+
+data_source_uri = "s3://dalhussein-courses/datasets/school/v1/"
+db_name = 'DE_Associate_School'
+dlt_db_name = 'DE_Associate_School_DLT'
+
+catalogs = spark.sql("SHOW CATALOGS").collect()
+hive_exists = any(row.catalog == 'hive_metastore' for row in catalogs)
+if hive_exists:
+    data_catalog = 'hive_metastore'
+    dataset_school = 'dbfs:/mnt/DE-Associate/datasets/school'
+    checkpoints_school = 'dbfs:/mnt/DE-Associate/checkpoints/school'
+    dlt_path = 'dbfs:/mnt/DE-Associate/dlt/school'
+
+    spark.sql(f"USE CATALOG {data_catalog}")
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
+    spark.sql(f"USE SCHEMA {db_name}")
+
+    try:
+        spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")
+        spark.conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
+    except:
+        pass
+else:
+    data_catalog = spark.sql("SELECT current_catalog()").collect()[0][0]
+    dataset_volume_name = "dataset"
+    checkpoints_volume_name = "checkpoints"
+    dataset_school = f"/Volumes/{data_catalog}/{db_name}/{dataset_volume_name}"
+    checkpoints_school = f"/Volumes/{data_catalog}/{db_name}/{checkpoints_volume_name}"
+
+    spark.sql(f"USE CATALOG {data_catalog}")
+    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
+    spark.sql(f"USE SCHEMA {db_name}")
+
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS {dataset_volume_name}")
+    spark.sql(f"CREATE VOLUME IF NOT EXISTS {checkpoints_volume_name}")
+
+spark.sql(f"CREATE SCHEMA IF NOT EXISTS {dlt_db_name}")
+
+print(f"Data catalog for the hands-on labs: {data_catalog}")
+print(f"Schema: {db_name}")
+
+# COMMAND ----------
+
 def clean_up():
     print("Removing Checkpoints ...")
     dbutils.fs.rm(checkpoint_path, True)
@@ -110,46 +156,6 @@ def load_new_json_data(all=False):
     else:
         load_json_file(index)
         index += 1
-
-# COMMAND ----------
-
-data_source_uri = "s3://dalhussein-courses/datasets/school/v1/"
-db_name = 'DE_Associate_School'
-dlt_db_name = 'DE_Associate_School_DLT'
-
-catalogs = spark.sql("SHOW CATALOGS").collect()
-hive_exists = any(row.catalog == 'hive_metastore' for row in catalogs)
-if hive_exists:
-    data_catalog = 'hive_metastore'
-    dataset_school = 'dbfs:/mnt/DE-Associate/datasets/school'
-    checkpoints_school = 'dbfs:/mnt/DE-Associate/checkpoints/school'
-    dlt_path = 'dbfs:/mnt/DE-Associate/dlt/school'
-
-    spark.sql(f"USE CATALOG {data_catalog}")
-    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
-    spark.sql(f"USE SCHEMA {db_name}")
-
-    try:
-        spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")
-        spark.conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
-    except:
-        pass
-else:
-    data_catalog = spark.sql("SELECT current_catalog()").collect()[0][0]
-    dataset_volume_name = "school_dataset"
-    checkpoints_volume_name = "school_checkpoints"
-    dataset_bookstore = f"/Volumes/{data_catalog}/{db_name}/{dataset_volume_name}"
-    checkpoints_bookstore = f"/Volumes/{data_catalog}/{db_name}/{checkpoints_volume_name}"
-
-    spark.sql(f"USE CATALOG {data_catalog}")
-    spark.sql(f"CREATE SCHEMA IF NOT EXISTS {db_name}")
-    spark.sql(f"USE SCHEMA {db_name}")
-
-    spark.sql(f"CREATE VOLUME IF NOT EXISTS {dataset_volume_name}")
-    spark.sql(f"CREATE VOLUME IF NOT EXISTS {checkpoints_volume_name}")
-
-print(f"Data Catalog for the hands-on labs: {data_catalog}")
-print(f"Schema: {db_name}")
 
 # COMMAND ----------
 

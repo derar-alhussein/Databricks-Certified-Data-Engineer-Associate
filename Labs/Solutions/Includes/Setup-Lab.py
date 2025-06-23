@@ -1,4 +1,8 @@
 # Databricks notebook source
+import time
+
+# COMMAND ----------
+
 data_source_uri = "s3://dalhussein-courses/datasets/school/v1/"
 db_name = 'DE_Associate_School'
 dlt_db_name = 'DE_Associate_School_DLT'
