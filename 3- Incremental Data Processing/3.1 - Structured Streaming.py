@@ -54,12 +54,13 @@ display(author_counts_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/aut
 # COMMAND ----------
 
 sorted_books_df = books_streaming_df.orderBy("author")
-#(sorted_books_df.writeStream
-#                .option("checkpointLocation", f"{checkpoints_bookstore}/sorted_books")
-#                .trigger(availableNow=True)
-#                .format("console")
-#                .start()
-#)
+
+(sorted_books_df.writeStream
+                .option("checkpointLocation", f"{checkpoints_bookstore}/sorted_books")
+                .trigger(availableNow=True)
+                .format("console")
+                .start()
+)
 
 # COMMAND ----------
 
