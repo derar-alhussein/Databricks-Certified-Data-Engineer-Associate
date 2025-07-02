@@ -23,9 +23,12 @@ def download_dataset(source, target):
 
 # COMMAND ----------
 
-data_source_uri = "wasbs://course-resources@dalhussein.blob.core.windows.net/datasets/bookstore/v1/"
+data_source_uri = "s3://dalhussein-courses/datasets/bookstore/v1/"
 dataset_bookstore = 'dbfs:/mnt/demo-datasets/bookstore'
+data_catalog = 'hive_metastore'
 spark.conf.set(f"dataset.bookstore", dataset_bookstore)
+spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")
+spark.conf.set("fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider")
 
 # COMMAND ----------
 
@@ -36,6 +39,11 @@ def get_index(dir):
         file = max(files).name
         index = int(file.rsplit('.', maxsplit=1)[0])
     return index+1
+
+# COMMAND ----------
+
+def set_current_catalog(catalog_name):
+    spark.sql(f"USE CATALOG {catalog_name}")
 
 # COMMAND ----------
 
@@ -95,3 +103,4 @@ def load_new_json_data(all=False):
 # COMMAND ----------
 
 download_dataset(data_source_uri, dataset_bookstore)
+set_current_catalog(data_catalog)

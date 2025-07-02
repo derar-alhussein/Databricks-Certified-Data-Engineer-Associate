@@ -1,4 +1,11 @@
 -- Databricks notebook source
+-- MAGIC %md
+-- MAGIC ## Managed Tables
+
+-- COMMAND ----------
+
+USE CATALOG hive_metastore;
+
 CREATE TABLE managed_default
   (width INT, length INT, height INT);
 
@@ -8,6 +15,12 @@ VALUES (3 INT, 2 INT, 1 INT)
 -- COMMAND ----------
 
 DESCRIBE EXTENDED managed_default
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## External Tables
 
 -- COMMAND ----------
 
@@ -24,6 +37,12 @@ DESCRIBE EXTENDED external_default
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Dropping Tables
+
+-- COMMAND ----------
+
 DROP TABLE managed_default
 
 -- COMMAND ----------
@@ -37,6 +56,11 @@ DROP TABLE external_default
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/mnt/demo/external_default'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Creating Schemas
 
 -- COMMAND ----------
 
@@ -80,11 +104,16 @@ DROP TABLE external_new_default;
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/managed_new_default'
+-- MAGIC %fs ls 'dbfs:/user/hive/warehouse/new_default.db/managed_new_default'
 
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/mnt/demo/external_new_default'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Creating Schemas in Custom Location
 
 -- COMMAND ----------
 
@@ -134,7 +163,3 @@ DROP TABLE external_custom;
 -- COMMAND ----------
 
 -- MAGIC %fs ls 'dbfs:/mnt/demo/external_custom'
-
--- COMMAND ----------
-
-

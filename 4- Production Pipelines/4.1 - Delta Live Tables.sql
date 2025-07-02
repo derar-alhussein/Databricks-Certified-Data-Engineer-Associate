@@ -1,16 +1,20 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC 
--- MAGIC 
+-- MAGIC
+-- MAGIC
 -- MAGIC # Delta Live Tables
 
 -- COMMAND ----------
 
 -- MAGIC %md-sandbox
--- MAGIC 
+-- MAGIC
 -- MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
--- MAGIC   <img src="https://dalhussein.blob.core.windows.net/course-resources/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
+-- MAGIC   <img src="https://raw.githubusercontent.com/derar-alhussein/Databricks-Certified-Data-Engineer-Associate/main/Includes/images/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 -- MAGIC </div>
+
+-- COMMAND ----------
+
+SET datasets.path=dbfs:/mnt/demo-datasets/bookstore;
 
 -- COMMAND ----------
 
@@ -26,7 +30,7 @@
 
 CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
 COMMENT "The raw books orders, ingested from orders-raw"
-AS SELECT * FROM cloud_files("${datasets_path}/orders-json-raw", "json",
+AS SELECT * FROM cloud_files("${datasets.path}/orders-json-raw", "json",
                              map("cloudFiles.inferColumnTypes", "true"))
 
 -- COMMAND ----------
@@ -38,16 +42,16 @@ AS SELECT * FROM cloud_files("${datasets_path}/orders-json-raw", "json",
 
 CREATE OR REFRESH LIVE TABLE customers
 COMMENT "The customers lookup table, ingested from customers-json"
-AS SELECT * FROM json.`${datasets_path}/customers-json`
+AS SELECT * FROM json.`${datasets.path}/customers-json`
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC 
--- MAGIC 
--- MAGIC 
+-- MAGIC
+-- MAGIC
+-- MAGIC
 -- MAGIC ## Silver Layer Tables
--- MAGIC 
+-- MAGIC
 -- MAGIC #### orders_cleaned
 
 -- COMMAND ----------
@@ -68,7 +72,7 @@ AS
 
 -- MAGIC %md
 -- MAGIC >> Constraint violation
--- MAGIC 
+-- MAGIC
 -- MAGIC | **`ON VIOLATION`** | Behavior |
 -- MAGIC | --- | --- |
 -- MAGIC | **`DROP ROW`** | Discard records that violate constraints |
@@ -78,8 +82,8 @@ AS
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC 
--- MAGIC 
+-- MAGIC
+-- MAGIC
 -- MAGIC ## Gold Tables
 
 -- COMMAND ----------
