@@ -1,13 +1,19 @@
 # Databricks notebook source
 # MAGIC %md-sandbox
-# MAGIC 
+# MAGIC
 # MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
-# MAGIC   <img src="https://dalhussein.blob.core.windows.net/course-resources/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
+# MAGIC   <img src="https://raw.githubusercontent.com/derar-alhussein/Databricks-Certified-Data-Engineer-Associate/main/Includes/images/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 # MAGIC </div>
 
 # COMMAND ----------
 
 # MAGIC %run ../Includes/Copy-Datasets
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+# MAGIC ## Reading Stream
 
 # COMMAND ----------
 
@@ -18,8 +24,19 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Displaying Streaming Data
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC SELECT * FROM books_streaming_tmp_vw
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Applying Transformations
 
 # COMMAND ----------
 
@@ -30,10 +47,22 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Unsupported Operations
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC  SELECT * 
 # MAGIC  FROM books_streaming_tmp_vw
 # MAGIC  ORDER BY author
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC
+# MAGIC ## Persisting Streaming Data
 
 # COMMAND ----------
 
@@ -62,11 +91,21 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ## Adding New Data
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC INSERT INTO books
 # MAGIC values ("B19", "Introduction to Modeling and Simulation", "Mark W. Spong", "Computer Science", 25),
 # MAGIC         ("B20", "Robot Modeling and Control", "Mark W. Spong", "Computer Science", 30),
 # MAGIC         ("B21", "Turing's Vision: The Birth of Computer Science", "Chris Bernhardt", "Computer Science", 35)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Streaming in Batch Mode 
 
 # COMMAND ----------
 
@@ -92,7 +131,3 @@
 # MAGIC %sql
 # MAGIC SELECT *
 # MAGIC FROM author_counts
-
-# COMMAND ----------
-
-

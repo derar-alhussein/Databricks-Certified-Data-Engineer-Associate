@@ -1,4 +1,11 @@
 -- Databricks notebook source
+-- MAGIC %md
+-- MAGIC ## Preparing Sample Data
+
+-- COMMAND ----------
+
+USE CATALOG hive_metastore;
+
 CREATE TABLE IF NOT EXISTS smartphones
 (id INT, name STRING, brand STRING, year INT);
 
@@ -20,6 +27,11 @@ SHOW TABLES
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Creating Stored Views
+
+-- COMMAND ----------
+
 CREATE VIEW view_apple_phones
 AS  SELECT * 
     FROM smartphones 
@@ -35,6 +47,12 @@ SHOW TABLES;
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Creating Temporary Views
+
+-- COMMAND ----------
+
 CREATE TEMP VIEW temp_view_phones_brands
 AS  SELECT DISTINCT brand
     FROM smartphones;
@@ -44,6 +62,12 @@ SELECT * FROM temp_view_phones_brands;
 -- COMMAND ----------
 
 SHOW TABLES;
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Creating Global Temporary Views
 
 -- COMMAND ----------
 
@@ -67,7 +91,3 @@ SHOW TABLES IN global_temp;
 -- COMMAND ----------
 
 SHOW TABLES
-
--- COMMAND ----------
-
-
