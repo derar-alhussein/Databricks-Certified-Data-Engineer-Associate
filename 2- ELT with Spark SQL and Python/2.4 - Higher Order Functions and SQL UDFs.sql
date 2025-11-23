@@ -1,8 +1,8 @@
 -- Databricks notebook source
 -- MAGIC %md-sandbox
--- MAGIC 
+-- MAGIC
 -- MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
--- MAGIC   <img src="https://dalhussein.blob.core.windows.net/course-resources/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
+-- MAGIC   <img src="https://raw.githubusercontent.com/derar-alhussein/Databricks-Certified-Data-Engineer-Associate/main/Includes/images/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 -- MAGIC </div>
 
 -- COMMAND ----------
@@ -12,6 +12,12 @@
 -- COMMAND ----------
 
 SELECT * FROM orders
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Filtering Arrays
 
 -- COMMAND ----------
 
@@ -33,6 +39,12 @@ WHERE size(multiple_copies) > 0;
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Transforming Arrays
+
+-- COMMAND ----------
+
 SELECT
   order_id,
   books,
@@ -41,6 +53,11 @@ SELECT
     b -> CAST(b.subtotal * 0.8 AS INT)
   ) AS subtotal_after_discount
 FROM orders;
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## User Defined Functions (UDF)
 
 -- COMMAND ----------
 
@@ -82,7 +99,3 @@ FROM customers
 
 DROP FUNCTION get_url;
 DROP FUNCTION site_type;
-
--- COMMAND ----------
-
-

@@ -1,13 +1,19 @@
 -- Databricks notebook source
 -- MAGIC %md-sandbox
--- MAGIC 
+-- MAGIC
 -- MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
--- MAGIC   <img src="https://dalhussein.blob.core.windows.net/course-resources/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
+-- MAGIC   <img src="https://raw.githubusercontent.com/derar-alhussein/Databricks-Certified-Data-Engineer-Associate/main/Includes/images/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 -- MAGIC </div>
 
 -- COMMAND ----------
 
 -- MAGIC %run ../Includes/Copy-Datasets
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ## Parsing JSON Data
 
 -- COMMAND ----------
 
@@ -65,8 +71,18 @@ FROM orders
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Explode Function
+
+-- COMMAND ----------
+
 SELECT order_id, customer_id, explode(books) AS book 
 FROM orders
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Collecting Rows
 
 -- COMMAND ----------
 
@@ -78,11 +94,23 @@ GROUP BY customer_id
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ##Flatten Arrays
+
+-- COMMAND ----------
+
 SELECT customer_id,
   collect_set(books.book_id) As before_flatten,
   array_distinct(flatten(collect_set(books.book_id))) AS after_flatten
 FROM orders
 GROUP BY customer_id
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC
+-- MAGIC ##Join Operations
 
 -- COMMAND ----------
 
@@ -95,6 +123,11 @@ INNER JOIN books b
 ON o.book.book_id = b.book_id;
 
 SELECT * FROM orders_enriched
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Set Operations
 
 -- COMMAND ----------
 
@@ -119,6 +152,11 @@ SELECT * FROM orders_updates
 
 -- COMMAND ----------
 
+-- MAGIC %md
+-- MAGIC ## Reshaping Data with Pivot
+
+-- COMMAND ----------
+
 CREATE OR REPLACE TABLE transactions AS
 
 SELECT * FROM (
@@ -135,36 +173,3 @@ SELECT * FROM (
 );
 
 SELECT * FROM transactions
-
--- COMMAND ----------
-
-SELECT
-  order_id,
-  books,
-  FILTER (books, i -> i.quantity >= 2) AS many_books
-FROM orders
-
--- COMMAND ----------
-
-SELECT order_id, many_books
-FROM (
-  SELECT
-    order_id,
-    FILTER (books, i -> i.quantity >= 2) AS many_books
-  FROM orders)
-WHERE size(many_books) > 0;
-
--- COMMAND ----------
-
-SELECT
-  order_id,
-  books,
-  TRANSFORM (
-    books,
-    k -> CAST(k.subtotal * 0.8 AS INT)
-  ) AS subtotal_after_discount
-FROM orders;
-
--- COMMAND ----------
-
-
