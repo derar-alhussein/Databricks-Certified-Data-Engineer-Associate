@@ -4,6 +4,10 @@
 
 -- COMMAND ----------
 
+USE CATALOG demo_catalog
+
+-- COMMAND ----------
+
 CREATE TABLE employees
   (id INT, name STRING, salary DOUBLE);
 
@@ -25,20 +29,8 @@ CREATE TABLE employees
 INSERT INTO employees
 VALUES 
   (1, "Adam", 3500.0),
-  (2, "Sarah", 4020.5);
-
-INSERT INTO employees
-VALUES
-  (3, "John", 2999.3),
-  (4, "Thomas", 4000.3);
-
-INSERT INTO employees
-VALUES
-  (5, "Anna", 2500.0);
-
-INSERT INTO employees
-VALUES
-  (6, "Kim", 6200.3)
+  (2, "Sarah", 4020.5),
+  (3, "John", 2999.3);
 
 -- COMMAND ----------
 
@@ -65,29 +57,28 @@ DESCRIBE DETAIL employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## Updating Table
+-- MAGIC ## Inserting More Data
 
 -- COMMAND ----------
 
-UPDATE employees 
-SET salary = salary + 100
-WHERE name LIKE "A%"
+INSERT INTO employees
+VALUES
+  (4, "Thomas", 4000.3),
+  (5, "Anna", 2500.0);
+
+-- COMMAND ----------
+
+INSERT INTO employees
+VALUES
+  (6, "Kim", 6200.3)
 
 -- COMMAND ----------
 
 SELECT * FROM employees
-
--- COMMAND ----------
-
---%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
 DESCRIBE DETAIL employees
-
--- COMMAND ----------
-
-SELECT * FROM employees
 
 -- COMMAND ----------
 
@@ -97,15 +88,3 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 DESCRIBE HISTORY employees
-
--- COMMAND ----------
-
---%fs ls '/path/to/employees/_delta_log'
-
--- COMMAND ----------
-
---%fs head '/path/to/employees/_delta_log/00000000000000000005.json'
-
--- COMMAND ----------
-
-
