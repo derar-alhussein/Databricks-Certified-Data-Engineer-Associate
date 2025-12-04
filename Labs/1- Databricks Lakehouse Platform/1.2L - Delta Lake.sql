@@ -32,13 +32,6 @@ VALUES
   (5, "Eric", 28),
   (6, "Salma", 42);
 
-UPDATE persons 
-SET age = age + 10
-WHERE id = 1;
-
-DELETE FROM persons
-WHERE name = "Eric";
-
 -- COMMAND ----------
 
 -- MAGIC %md
