@@ -4,10 +4,6 @@
 
 -- COMMAND ----------
 
---USE CATALOG hive_metastore
-
--- COMMAND ----------
-
 CREATE TABLE employees
   (id INT, name STRING, salary DOUBLE);
 
@@ -26,9 +22,6 @@ CREATE TABLE employees
 
 -- COMMAND ----------
 
--- NOTE: With latest Databricks Runtimes, inserting few records in single transaction is optimized into single data file.
--- For this demo, we will insert the records in multiple transactions in order to create 4 data files.
-
 INSERT INTO employees
 VALUES 
   (1, "Adam", 3500.0),
@@ -46,8 +39,6 @@ VALUES
 INSERT INTO employees
 VALUES
   (6, "Kim", 6200.3)
-
--- NOTE: When executing multiple SQL statements in the same cell, only the last statement's result will be displayed in the cell output.
 
 -- COMMAND ----------
 
