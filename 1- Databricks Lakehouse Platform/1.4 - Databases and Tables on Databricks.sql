@@ -1,10 +1,6 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC To create external tables in Databricks Express or Free Edition, you first need to set up a connection to an Amazon S3 bucket to store the table data.
--- MAGIC
--- MAGIC - Step 1: Create an S3 bucket in your AWS account
--- MAGIC - Step 2: Configure [External Location](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/external-locations#-option-1-create-an-external-location-for-an-s3-bucket-using-an-aws-cloudformation-template) object in this workspace to connect your S3 bucket to Databricks
--- MAGIC - Step 3: In the cells below, replace _&lt;BUCKET&gt;_ with the name of your S3 bucket, and then proceed to run them.
+-- MAGIC **Instructions**: To run the cells below, replace _&lt;BUCKET&gt;_ with the name of the S3 bucket linked to your External Location.
 
 -- COMMAND ----------
 
