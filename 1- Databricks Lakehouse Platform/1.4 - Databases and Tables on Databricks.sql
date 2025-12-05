@@ -9,10 +9,10 @@
 
 -- COMMAND ----------
 
-CREATE CATALOG IF NOT EXISTS demo_cat
+CREATE CATALOG IF NOT EXISTS dev_catalog
 MANAGED LOCATION 's3://<BUCKET>';
 
-USE CATALOG demo_cat;
+USE CATALOG dev_catalog;
 
 -- COMMAND ----------
 
