@@ -1,17 +1,9 @@
 -- Databricks notebook source
---USE CATALOG hive_metastore;
+USE CATALOG dev_catalog;
 
 -- COMMAND ----------
 
 SHOW TABLES;
-
--- COMMAND ----------
-
---SHOW TABLES IN global_temp;
-
--- COMMAND ----------
-
---SELECT * FROM global_temp.global_temp_view_latest_phones;
 
 -- COMMAND ----------
 
@@ -24,8 +16,3 @@ SHOW TABLES;
 DROP TABLE smartphones;
 
 DROP VIEW view_apple_phones;
---DROP VIEW global_temp.global_temp_view_latest_phones;
-
--- COMMAND ----------
-
-
