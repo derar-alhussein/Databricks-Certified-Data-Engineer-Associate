@@ -45,7 +45,7 @@ SELECT count(*) FROM json.`${dataset_bookstore}/customers-json`
 -- COMMAND ----------
 
  SELECT *,
-    _metadata.file_path  source_file
+    _metadata.file_path source_file
   FROM json.`${dataset_bookstore}/customers-json`;
 
 -- COMMAND ----------
