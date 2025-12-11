@@ -8,7 +8,9 @@ def path_exists(path):
     dbutils.fs.ls(path)
     return True
   except Exception as e:
-    if 'java.io.FileNotFoundException' in str(e):
+    msg = str(e)
+    if ("com.databricks.sql.io.CloudFileNotFoundException" in msg
+        or "java.io.FileNotFoundException" in msg):
       return False
     else:
       raise

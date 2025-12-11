@@ -45,7 +45,7 @@ display(files)
 
 # MAGIC %sql
 # MAGIC CREATE OR REPLACE TEMPORARY VIEW orders_tmp AS (
-# MAGIC   SELECT *, current_timestamp() arrival_time,  _metadata.file_path source_file
+# MAGIC   SELECT *, current_timestamp() arrival_time, input_file_name() source_file
 # MAGIC   FROM orders_raw_temp
 # MAGIC )
 
