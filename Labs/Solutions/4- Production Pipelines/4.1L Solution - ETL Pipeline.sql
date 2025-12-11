@@ -1,12 +1,9 @@
 -- Databricks notebook source
 -- MAGIC %md
 -- MAGIC
--- MAGIC ## Lab Solution: implementing a DLT pipeline
+-- MAGIC ## Lab Solution: implementing a ETL pipeline
 -- MAGIC
--- MAGIC > This notebook is **not intended** to be executed interactively, but rather to be deployed as a DLT pipeline from the **workflows** tab
--- MAGIC
--- MAGIC
--- MAGIC * Help: <a href="https://docs.databricks.com/en/delta-live-tables/tutorial-sql.html" target="_blank">DLT syntax documentation</a>.
+-- MAGIC > This notebook is **not intended** to be executed interactively, but rather to be deployed as a ETL pipeline from the **workflows** tab
 
 -- COMMAND ----------
 
@@ -18,10 +15,6 @@
 
 -- COMMAND ----------
 
---CREATE WIDGET TEXT datasets_path DEFAULT "/Volumes/workspace/DE_Associate_School/dataset"
-
--- COMMAND ----------
-
 -- MAGIC %md
 -- MAGIC #### Q1- Declaring Bronze Tables
 -- MAGIC
@@ -30,10 +23,10 @@
 -- COMMAND ----------
 
 -- ANSWER
-CREATE OR REFRESH STREAMING LIVE TABLE enrollments_bronze
-AS SELECT * FROM cloud_files("${datasets_path}/enrollments-json-raw", "json",
-                             map("cloudFiles.inferColumnTypes", "true",
-                                  "cloudFiles.schemaLocation", "/Volumes/workspace/DE_Associate_School/checkpoints/dlt/orders_raw"))
+CREATE OR REFRESH STREAMING TABLE enrollments_bronze
+AS SELECT * FROM cloud_files("${datasets_path}/enrollments-json-raw",
+                                   format => 'json',
+                                    inferColumnTypes => true))
 
 -- COMMAND ----------
 
@@ -43,7 +36,7 @@ AS SELECT * FROM cloud_files("${datasets_path}/enrollments-json-raw", "json",
 -- COMMAND ----------
 
 -- ANSWER
-CREATE OR REFRESH LIVE TABLE students_bronze
+CREATE OR REFRESH MATERIALIZED VIEW students_bronze
 AS SELECT * FROM json.`${datasets_path}/students-json`
 
 -- COMMAND ----------
@@ -68,12 +61,12 @@ AS SELECT * FROM json.`${datasets_path}/students-json`
 -- COMMAND ----------
 
 -- ANSWER
-CREATE OR REFRESH STREAMING LIVE TABLE enrollments_cleaned (
+CREATE OR REFRESH STREAMING TABLE enrollments_cleaned (
   CONSTRAINT valid_email EXPECT (email IS NOT NULL) ON VIOLATION DROP ROW
 )
 AS SELECT enroll_id, total, email, profile:address:country as country
-  FROM STREAM(LIVE.enrollments_bronze) n
-  LEFT JOIN LIVE.students_bronze s
+  FROM STREAM enrollments_bronze n
+  LEFT JOIN students_bronze s
     ON n.student_id = s.student_id
 
 -- COMMAND ----------
@@ -90,7 +83,7 @@ AS SELECT enroll_id, total, email, profile:address:country as country
 -- COMMAND ----------
 
 -- ANSWER
-CREATE OR REFRESH LIVE TABLE course_sales_per_country
+CREATE OR REFRESH MATERIALIZED VIEW course_sales_per_country
 COMMENT "Course Sales Per Country"
 AS
   SELECT country, count(enroll_id) AS enrollments_count, sum(total) AS enrollments_amount
@@ -100,19 +93,16 @@ AS
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ### Q4- Deploying DLT pipeline
+-- MAGIC ### Q4- Deploying ETL pipeline
 -- MAGIC
--- MAGIC From the **Workflows** button on the sidebar, under the **Delta Live Tables** tab, click **Create Pipeline**
+-- MAGIC From the **Jobs & Pipelines** button on the sidebar, click **Create** -> **ETL Pipeline**
 -- MAGIC
 -- MAGIC Configure the pipeline settings specified below:
 -- MAGIC
 -- MAGIC | Setting | Instructions |
 -- MAGIC |--|--|
--- MAGIC | Pipeline name | School DLT |
--- MAGIC | Pipeline mode | Choose **Triggered** |
--- MAGIC | Source code | Use the navigator to select this current notebook (4.1L - Delta Live Tables) |
--- MAGIC | Schema | DE_Associate_School_DLT |
--- MAGIC | Cluster policy | Leave it **None**|
+-- MAGIC | Pipeline name | School ETL |
+-- MAGIC | Schema | DE_Associate_School_ETL |
 -- MAGIC | Advanced Configuration | Click **Add Configuration** and enter:<br> - Key: **datasets_path** <br> - Value: **/Volumes/workspace/DE_Associate_School/dataset** |
 -- MAGIC
 -- MAGIC Finally, click **Create**.
@@ -122,4 +112,4 @@ AS
 -- MAGIC %md
 -- MAGIC ### Q5 - Run your Pipeline
 -- MAGIC
--- MAGIC Select **Development** mode and Click **Start** to begin the update to your pipeline's tables
+-- MAGIC Click **Run Pipeline** to begin the update to your pipeline's tables
