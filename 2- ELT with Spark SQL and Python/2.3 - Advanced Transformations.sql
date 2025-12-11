@@ -154,31 +154,3 @@ SELECT * FROM orders_updates
 SELECT * FROM orders 
 MINUS 
 SELECT * FROM orders_updates 
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC ## Reshaping Data with Pivot
-
--- COMMAND ----------
-
-CREATE OR REPLACE TABLE transactions AS
-
-SELECT * FROM (
-  SELECT
-    customer_id,
-    book.book_id AS book_id,
-    book.quantity AS quantity
-  FROM orders_enriched
-) PIVOT (
-  sum(quantity) FOR book_id in (
-    'B01', 'B02', 'B03', 'B04', 'B05', 'B06',
-    'B07', 'B08', 'B09', 'B10', 'B11', 'B12'
-  )
-);
-
-SELECT * FROM transactions
-
--- COMMAND ----------
-
-
