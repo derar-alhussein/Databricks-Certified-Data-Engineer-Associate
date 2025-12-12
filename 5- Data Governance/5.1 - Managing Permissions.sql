@@ -18,16 +18,16 @@ AS SELECT * FROM hr_catalog.hr_db.employees WHERE city = 'Paris';
 
 ------------------------------------------------------
 
-GRANT SELECT, MODIFY, CREATE TABLE ON SCHEMA hr_db TO hr_team;
+GRANT SELECT, MODIFY, CREATE TABLE ON SCHEMA hr_catalog.hr_db TO hr_team;
+SHOW GRANTS ON SCHEMA hr_catalog.hr_db;
 GRANT USE SCHEMA ON SCHEMA hr_catalog.hr_db TO hr_team;
 GRANT USE CATALOG ON CATALOG hr_catalog TO hr_team;
-SHOW GRANTS ON SCHEMA hr_catalog.hr_db;
 
 GRANT CREATE SCHEMA ON CATALOG hr_catalog TO hr_team ;
 SHOW GRANTS ON CATALOG hr_catalog;
 
 GRANT SELECT ON TABLE hr_catalog.hr_db.employees TO `account users`;
-SHOW GRANTS ON VIEW hr_catalog.hr_db.employees;
+SHOW GRANTS ON TABLE hr_catalog.hr_db.employees;
 GRANT USE SCHEMA ON SCHEMA hr_catalog.hr_db TO `account users`;
 GRANT USE CATALOG ON CATALOG hr_catalog TO `account users`;
 
