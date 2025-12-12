@@ -36,3 +36,7 @@ SHOW GRANTS ON VIEW hr_catalog.hr_db.paris_emplyees_vw;
 GRANT USE SCHEMA ON SCHEMA hr_catalog.hr_db TO `adam@example.com`;
 GRANT USE CATALOG ON CATALOG hr_catalog TO `adam@example.com`;
 
+------------------------------------------------------
+
+SELECT * FROM system.access.audit
+
