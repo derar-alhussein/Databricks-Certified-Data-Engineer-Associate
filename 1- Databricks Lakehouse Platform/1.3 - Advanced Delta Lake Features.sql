@@ -5,10 +5,6 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
-
--- COMMAND ----------
-
 DESCRIBE HISTORY employees
 
 -- COMMAND ----------
@@ -30,7 +26,7 @@ SELECT * FROM employees
 
 -- COMMAND ----------
 
-RESTORE TABLE employees TO VERSION AS OF 5
+RESTORE TABLE employees TO VERSION AS OF 6
 
 -- COMMAND ----------
 
@@ -65,7 +61,7 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
@@ -79,7 +75,7 @@ VACUUM employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
@@ -95,9 +91,7 @@ VACUUM employees RETAIN 0 HOURS
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
-
--- COMMAND ----------
+-- -- Note: You may still see results due to a cached version of the table in the cluster. Restart your cluster to verify the result.
 
 SELECT * FROM employees@v1
 
@@ -114,7 +108,3 @@ DROP TABLE employees
 -- COMMAND ----------
 
 SELECT * FROM employees
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'

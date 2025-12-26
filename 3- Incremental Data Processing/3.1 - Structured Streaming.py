@@ -30,8 +30,8 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT * FROM books_streaming_tmp_vw
+books_streaming_df = spark.sql("SELECT * FROM books_streaming_tmp_vw")
+display(books_streaming_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/books_streaming_{time.time()}")
 
 # COMMAND ----------
 
@@ -40,10 +40,10 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC SELECT author, count(book_id) AS total_books
-# MAGIC FROM books_streaming_tmp_vw
-# MAGIC GROUP BY author
+author_counts_df = spark.sql("""SELECT author, count(book_id) AS total_books
+                                  FROM books_streaming_tmp_vw
+                                  GROUP BY author""")
+display(author_counts_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/author_counts_{time.time()}")
 
 # COMMAND ----------
 
@@ -53,10 +53,14 @@
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC  SELECT * 
-# MAGIC  FROM books_streaming_tmp_vw
-# MAGIC  ORDER BY author
+sorted_books_df = books_streaming_df.orderBy("author")
+
+(sorted_books_df.writeStream
+                .option("checkpointLocation", f"{checkpoints_bookstore}/sorted_books")
+                .trigger(availableNow=True)
+                .format("console")
+                .start()
+)
 
 # COMMAND ----------
 
@@ -79,8 +83,8 @@
       .writeStream  
       .trigger(processingTime='4 seconds')
       .outputMode("complete")
-      .option("checkpointLocation", "dbfs:/mnt/demo/author_counts_checkpoint")
-      .table("author_counts")
+      .option("checkpointLocation", f"{checkpoints_bookstore}/author_counts")
+      .toTable("author_counts")
 )
 
 # COMMAND ----------
@@ -121,8 +125,8 @@
       .writeStream           
       .trigger(availableNow=True)
       .outputMode("complete")
-      .option("checkpointLocation", "dbfs:/mnt/demo/author_counts_checkpoint")
-      .table("author_counts")
+      .option("checkpointLocation", f"{checkpoints_bookstore}/author_counts")
+      .toTable("author_counts")
       .awaitTermination()
 )
 

@@ -31,11 +31,11 @@ display(files)
 (spark.readStream
         .format("cloudFiles")
         .option("cloudFiles.format", "parquet")
-        .option("cloudFiles.schemaLocation", "dbfs:/mnt/demo/orders_checkpoint")
+        .option("cloudFiles.schemaLocation", f"{checkpoints_bookstore}/orders")
         .load(f"{dataset_bookstore}/orders-raw")
       .writeStream
-        .option("checkpointLocation", "dbfs:/mnt/demo/orders_checkpoint")
-        .table("orders_updates")
+        .option("checkpointLocation", f"{checkpoints_bookstore}/orders")
+        .toTable("orders_updates")
 )
 
 # COMMAND ----------
@@ -87,9 +87,14 @@ display(files)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC First, stop the above stream
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC DROP TABLE orders_updates
 
 # COMMAND ----------
 
-dbutils.fs.rm("dbfs:/mnt/demo/orders_checkpoint", True)
+dbutils.fs.rm(f"{checkpoints_bookstore}/orders", True)

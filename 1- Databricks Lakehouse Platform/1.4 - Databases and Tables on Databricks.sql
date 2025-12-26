@@ -1,10 +1,24 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC ## Managed Tables
+-- MAGIC To create external tables in Unity Catalog, let's use the default external location:
+-- MAGIC - Navigate to the Catalog explorer in the left sidebar.
+-- MAGIC - At the top, click the **External Data** button.
+-- MAGIC - Copy the URL and replace the `<EXTERNAL-URL>` placeholder below.
+-- MAGIC
+-- MAGIC The following cell configures the path as a notebook's parameter using Widgets, enabling its use in SQL queries through the `${external_location}` variable.
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore;
+-- MAGIC %python
+-- MAGIC dbutils.widgets.text("external_location", '<EXTERNAL-URL>/external_storage')
+-- MAGIC external_location = dbutils.widgets.get("external_location")
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ## Managed Tables
+
+-- COMMAND ----------
 
 CREATE TABLE managed_default
   (width INT, length INT, height INT);
@@ -26,8 +40,8 @@ DESCRIBE EXTENDED managed_default
 
 CREATE TABLE external_default
   (width INT, length INT, height INT)
-LOCATION 'dbfs:/mnt/demo/external_default';
-  
+LOCATION '${external_location}/external_default';
+
 INSERT INTO external_default
 VALUES (3 INT, 2 INT, 1 INT)
 
@@ -47,7 +61,9 @@ DROP TABLE managed_default
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/managed_default'
+-- MAGIC %python
+-- MAGIC # The underlying table directory is protected in Unity Catalog; therefore, this command cannot be executed.
+-- MAGIC # display(dbutils.fs.ls('/path/to/managed_default'))
 
 -- COMMAND ----------
 
@@ -55,7 +71,8 @@ DROP TABLE external_default
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/mnt/demo/external_default'
+-- MAGIC %python
+-- MAGIC display(dbutils.fs.ls(f'{external_location}/external_default'))
 
 -- COMMAND ----------
 
@@ -68,11 +85,7 @@ CREATE SCHEMA new_default
 
 -- COMMAND ----------
 
-DESCRIBE DATABASE EXTENDED new_default
-
--- COMMAND ----------
-
-USE new_default;
+USE SCHEMA new_default;
 
 CREATE TABLE managed_new_default
   (width INT, length INT, height INT);
@@ -84,7 +97,7 @@ VALUES (3 INT, 2 INT, 1 INT);
 
 CREATE TABLE external_new_default
   (width INT, length INT, height INT)
-LOCATION 'dbfs:/mnt/demo/external_new_default';
+LOCATION '${external_location}/external_new_default';
   
 INSERT INTO external_new_default
 VALUES (3 INT, 2 INT, 1 INT);
@@ -104,11 +117,8 @@ DROP TABLE external_new_default;
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/new_default.db/managed_new_default'
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/mnt/demo/external_new_default'
+-- MAGIC %python
+-- MAGIC display(dbutils.fs.ls(f'{external_location}/external_new_default'))
 
 -- COMMAND ----------
 
@@ -118,7 +128,7 @@ DROP TABLE external_new_default;
 -- COMMAND ----------
 
 CREATE SCHEMA custom
-LOCATION 'dbfs:/Shared/schemas/custom.db'
+MANAGED LOCATION '${external_location}/custom'
 
 -- COMMAND ----------
 
@@ -126,7 +136,7 @@ DESCRIBE DATABASE EXTENDED custom
 
 -- COMMAND ----------
 
-USE custom;
+USE SCHEMA custom;
 
 CREATE TABLE managed_custom
   (width INT, length INT, height INT);
@@ -138,7 +148,7 @@ VALUES (3 INT, 2 INT, 1 INT);
 
 CREATE TABLE external_custom
   (width INT, length INT, height INT)
-LOCATION 'dbfs:/mnt/demo/external_custom';
+LOCATION '${external_location}/external_custom';
   
 INSERT INTO external_custom
 VALUES (3 INT, 2 INT, 1 INT);
@@ -158,8 +168,5 @@ DROP TABLE external_custom;
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/Shared/schemas/custom.db/managed_custom'
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/mnt/demo/external_custom'
+-- MAGIC %python
+-- MAGIC display(dbutils.fs.ls(f'{external_location}/external_custom'))

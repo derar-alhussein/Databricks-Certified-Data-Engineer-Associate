@@ -4,7 +4,9 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+-- NOTE: If the hive_metastore catalog is not supported in your workspace, do not run this command. Instead, your tables will be created in the default unity catalog that matches your workspace name (e.g., "demo" catalog)
+
+--USE CATALOG hive_metastore
 
 -- COMMAND ----------
 
@@ -64,7 +66,8 @@ DESCRIBE DETAIL employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- The underlying table directory is protected in Unity Catalog; therefore, this command cannot be executed. You will learn how to access the table directory by creating external tables in Notebook 1.4.
+--%fs ls '/path/to/employees'
 
 -- COMMAND ----------
 
@@ -75,15 +78,15 @@ DESCRIBE DETAIL employees
 
 UPDATE employees 
 SET salary = salary + 100
-WHERE name LIKE "A%"
+WHERE name = "Adam";
+
+UPDATE employees 
+SET salary = salary + 100
+WHERE name = "Anna";
 
 -- COMMAND ----------
 
 SELECT * FROM employees
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
 
 -- COMMAND ----------
 
@@ -104,12 +107,6 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees/_delta_log'
+-- The underlying table directory is protected in Unity Catalog; therefore, this command cannot be executed. You will learn how to access the table directory by creating external tables in Notebook 1.4.
 
--- COMMAND ----------
-
--- MAGIC %fs head 'dbfs:/user/hive/warehouse/employees/_delta_log/00000000000000000005.json'
-
--- COMMAND ----------
-
-
+--%fs head '/path/to/employees/_delta_log/00000000000000000005.json'

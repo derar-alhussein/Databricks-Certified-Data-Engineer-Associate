@@ -30,8 +30,7 @@ FROM customers
 
 -- COMMAND ----------
 
-SELECT from_json(profile) AS profile_struct
-  FROM customers;
+--SELECT from_json(profile) AS profile_struct FROM customers;
 
 -- COMMAND ----------
 
