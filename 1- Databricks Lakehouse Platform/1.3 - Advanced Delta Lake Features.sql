@@ -5,40 +5,40 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+USE CATALOG alfred_databricks
 
 -- COMMAND ----------
 
-DESCRIBE HISTORY employees
+DESCRIBE HISTORY bronze.employees
 
 -- COMMAND ----------
 
 SELECT * 
-FROM employees VERSION AS OF 4
+FROM bronze.employees VERSION AS OF 4
 
 -- COMMAND ----------
 
-SELECT * FROM employees@v4
+SELECT * FROM bronze.employees@v4
 
 -- COMMAND ----------
 
-DELETE FROM employees
+DELETE FROM bronze.employees
 
 -- COMMAND ----------
 
-SELECT * FROM employees
+SELECT * FROM bronze.employees
 
 -- COMMAND ----------
 
-RESTORE TABLE employees TO VERSION AS OF 5
+RESTORE TABLE bronze.employees TO VERSION AS OF 5
 
 -- COMMAND ----------
 
-SELECT * FROM employees
+SELECT * FROM bronze.employees
 
 -- COMMAND ----------
 
-DESCRIBE HISTORY employees
+DESCRIBE HISTORY bronze.employees
 
 -- COMMAND ----------
 
@@ -48,20 +48,20 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
-DESCRIBE DETAIL employees
+DESCRIBE DETAIL bronze.employees
 
 -- COMMAND ----------
 
-OPTIMIZE employees
+OPTIMIZE bronze.employees
 ZORDER BY id
 
 -- COMMAND ----------
 
-DESCRIBE DETAIL employees
+DESCRIBE DETAIL bronze.employees
 
 -- COMMAND ----------
 
-DESCRIBE HISTORY employees
+DESCRIBE HISTORY bronze.employees
 
 -- COMMAND ----------
 
@@ -75,31 +75,32 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
-VACUUM employees
+VACUUM bronze.employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- %fs ls 'dbfs:/user/hive/warehouse/employees'
 
 -- COMMAND ----------
 
-VACUUM employees RETAIN 0 HOURS
+VACUUM bronze.employees RETAIN 0 HOURS
 
 -- COMMAND ----------
 
+-- no databricks free edition não temos acesso para alterar essa configuracao
 SET spark.databricks.delta.retentionDurationCheck.enabled = false;
 
 -- COMMAND ----------
 
-VACUUM employees RETAIN 0 HOURS
+VACUUM bronze.employees RETAIN 0 HOURS
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- %fs ls 'dbfs:/user/hive/warehouse/employees'
 
 -- COMMAND ----------
 
-SELECT * FROM employees@v1
+SELECT * FROM bronze.employees@v1
 
 -- COMMAND ----------
 
@@ -109,12 +110,12 @@ SELECT * FROM employees@v1
 
 -- COMMAND ----------
 
-DROP TABLE employees
+DROP TABLE bronze.employees
 
 -- COMMAND ----------
 
-SELECT * FROM employees
+SELECT * FROM bronze.employees
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/employees'
+-- %fs ls 'dbfs:/user/hive/warehouse/employees'
