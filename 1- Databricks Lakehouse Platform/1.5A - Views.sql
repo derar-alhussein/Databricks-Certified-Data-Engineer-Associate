@@ -4,7 +4,7 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore;
+USE CATALOG alfred_databricks;
 
 CREATE TABLE IF NOT EXISTS smartphones
 (id INT, name STRING, brand STRING, year INT);
@@ -71,14 +71,17 @@ SHOW TABLES;
 
 -- COMMAND ----------
 
+/*
+[NOT_SUPPORTED_WITH_SERVERLESS] GLOBAL TEMPORARY VIEW is not supported on serverless compute. SQLSTATE: 0A000
 CREATE GLOBAL TEMP VIEW global_temp_view_latest_phones
 AS SELECT * FROM smartphones
     WHERE year > 2020
     ORDER BY year DESC;
+    */
 
 -- COMMAND ----------
 
-SELECT * FROM global_temp.global_temp_view_latest_phones;
+-- SELECT * FROM global_temp.global_temp_view_latest_phones;
 
 -- COMMAND ----------
 
