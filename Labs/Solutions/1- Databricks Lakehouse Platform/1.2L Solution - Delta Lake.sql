@@ -12,7 +12,7 @@
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore;
+--USE CATALOG hive_metastore;
 
 CREATE OR REPLACE TABLE persons
   (id INT, name STRING, age INT);
@@ -74,27 +74,3 @@ DESCRIBE HISTORY persons
 
 --Answer
 DESCRIBE DETAIL persons
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC #### Q4- Exploring table directory
--- MAGIC
--- MAGIC Explore the table directory using the **%fs** magic command.
--- MAGIC
--- MAGIC **Hint:** get the table location from the above metadata information
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/persons'
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC #### Q5- Exploring the transactions log
--- MAGIC
--- MAGIC Explore the **_delta_log** subfolder in the table directory
-
--- COMMAND ----------
-
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/persons/_delta_log'

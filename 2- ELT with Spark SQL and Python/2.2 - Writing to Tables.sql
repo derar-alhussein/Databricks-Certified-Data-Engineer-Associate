@@ -11,8 +11,13 @@
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC dbutils.widgets.text("dataset_bookstore", dataset_bookstore)
+
+-- COMMAND ----------
+
 CREATE TABLE orders AS
-SELECT * FROM parquet.`${dataset.bookstore}/orders`
+SELECT * FROM parquet.`${dataset_bookstore}/orders`
 
 -- COMMAND ----------
 
@@ -26,7 +31,7 @@ SELECT * FROM orders
 -- COMMAND ----------
 
 CREATE OR REPLACE TABLE orders AS
-SELECT * FROM parquet.`${dataset.bookstore}/orders`
+SELECT * FROM parquet.`${dataset_bookstore}/orders`
 
 -- COMMAND ----------
 
@@ -35,7 +40,7 @@ DESCRIBE HISTORY orders
 -- COMMAND ----------
 
 INSERT OVERWRITE orders
-SELECT * FROM parquet.`${dataset.bookstore}/orders`
+SELECT * FROM parquet.`${dataset_bookstore}/orders`
 
 -- COMMAND ----------
 
@@ -44,7 +49,7 @@ DESCRIBE HISTORY orders
 -- COMMAND ----------
 
 INSERT OVERWRITE orders
-SELECT *, current_timestamp() FROM parquet.`${dataset.bookstore}/orders`
+SELECT *, current_timestamp() FROM parquet.`${dataset_bookstore}/orders`
 
 -- COMMAND ----------
 
@@ -54,7 +59,7 @@ SELECT *, current_timestamp() FROM parquet.`${dataset.bookstore}/orders`
 -- COMMAND ----------
 
 INSERT INTO orders
-SELECT * FROM parquet.`${dataset.bookstore}/orders-new`
+SELECT * FROM parquet.`${dataset_bookstore}/orders-new`
 
 -- COMMAND ----------
 
@@ -68,7 +73,7 @@ SELECT count(*) FROM orders
 -- COMMAND ----------
 
 CREATE OR REPLACE TEMP VIEW customers_updates AS 
-SELECT * FROM json.`${dataset.bookstore}/customers-json-new`;
+SELECT * FROM json.`${dataset_bookstore}/customers-json-new`;
 
 MERGE INTO customers c
 USING customers_updates u
@@ -79,14 +84,12 @@ WHEN NOT MATCHED THEN INSERT *
 
 -- COMMAND ----------
 
-CREATE OR REPLACE TEMP VIEW books_updates
-   (book_id STRING, title STRING, author STRING, category STRING, price DOUBLE)
-USING CSV
-OPTIONS (
-  path = "${dataset.bookstore}/books-csv-new",
-  header = "true",
-  delimiter = ";"
-);
+CREATE OR REPLACE TEMP VIEW books_updates AS
+SELECT * FROM read_files(
+    '${dataset_bookstore}/books-csv-new',
+    format => 'csv',
+    header => 'true',
+    delimiter => ';');
 
 SELECT * FROM books_updates
 
@@ -97,3 +100,7 @@ USING books_updates u
 ON b.book_id = u.book_id AND b.title = u.title
 WHEN NOT MATCHED AND u.category = 'Computer Science' THEN 
   INSERT *
+
+-- COMMAND ----------
+
+

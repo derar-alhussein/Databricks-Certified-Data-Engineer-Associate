@@ -11,6 +11,11 @@
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC dbutils.widgets.text("dataset_bookstore", dataset_bookstore)
+
+-- COMMAND ----------
+
 SELECT * FROM orders
 
 -- COMMAND ----------

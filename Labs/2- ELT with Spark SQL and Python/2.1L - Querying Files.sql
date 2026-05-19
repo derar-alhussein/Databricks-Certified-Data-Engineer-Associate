@@ -14,6 +14,11 @@
 
 -- COMMAND ----------
 
+-- MAGIC %python
+-- MAGIC dbutils.widgets.text("dataset_school", dataset_school)
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC #### Q1- Extracting data directly from Parquet files
 -- MAGIC
@@ -69,21 +74,11 @@ SELECT * FROM students
 -- MAGIC %md
 -- MAGIC #### Q3- Registering Tables from CSV Files
 -- MAGIC
--- MAGIC Create the temporary view **courses_tmp_vw** from the csv files in the directory: **${dataset.school}/courses-csv**
+-- MAGIC Create the manged table **courses** from the csv files in the directory: **${dataset_school}/courses-csv**
 -- MAGIC
 -- MAGIC Knowing that:
 -- MAGIC * The delimiter is semicolon (**;**)
 -- MAGIC * There is a header of column names in each file
--- MAGIC
--- MAGIC The schema for the view:
--- MAGIC
--- MAGIC | Column Name | Column Type |
--- MAGIC | --- | --- |
--- MAGIC | course_id | STRING |
--- MAGIC | title | STRING |
--- MAGIC | instructor | STRING |
--- MAGIC | category | STRING |
--- MAGIC | price | DOUBLE |
 
 -- COMMAND ----------
 
@@ -92,7 +87,7 @@ SELECT * FROM students
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Create the manged table **courses** from the temporary view **courses_tmp_vw**
+-- MAGIC Query the data in the **courses** table to ensure data was written as expected.
 
 -- COMMAND ----------
 

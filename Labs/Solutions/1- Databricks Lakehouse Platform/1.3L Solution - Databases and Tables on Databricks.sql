@@ -5,13 +5,25 @@
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC #### Setting the default catalog
+-- MAGIC To create external tables in Databricks Express or Free Edition, you first need to set up a connection to an Amazon S3 bucket to store the table data.
 -- MAGIC
--- MAGIC Run the cell below to set the current catalog to **hive_metastore**
+-- MAGIC - Step 1: Create an S3 bucket in your AWS account
+-- MAGIC - Step 2: Configure [External Location](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/external-locations#-option-1-create-an-external-location-for-an-s3-bucket-using-an-aws-cloudformation-template) object in this workspace to connect your S3 bucket to Databricks
+-- MAGIC - Step 3: In the cells below, replace _&lt;BUCKET&gt;_ with the name of your S3 bucket, and then proceed to run them.
 
 -- COMMAND ----------
 
-USE CATALOG hive_metastore
+-- MAGIC %md
+-- MAGIC #### Setting the default catalog
+-- MAGIC
+-- MAGIC Run the cell below to create and set the current catalog
+
+-- COMMAND ----------
+
+CREATE CATALOG IF NOT EXISTS demo_cat
+MANAGED LOCATION 's3://<BUCKET>';
+
+USE CATALOG demo_cat;
 
 -- COMMAND ----------
 
@@ -51,7 +63,7 @@ DESCRIBE EXTENDED movies_managed
 -- MAGIC #### Q2 - Creating external table
 -- MAGIC
 -- MAGIC In the default database, create an external Delta table named **actors_external**, and located under the directory:
--- MAGIC **dbfs:/mnt/demo/actors_external**
+-- MAGIC **s3://&lt;BUCKET&gt;/external_storage/actors_external**
 -- MAGIC
 -- MAGIC The schema for the table:
 -- MAGIC
@@ -66,16 +78,16 @@ DESCRIBE EXTENDED movies_managed
 -- Answer
 CREATE OR REPLACE TABLE actors_external
   (actor_id INT, name STRING, nationality STRING)
-LOCATION 'dbfs:/mnt/demo/actors_external';
+LOCATION 's3://<BUCKET>/external_storage/actors_external';
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC #### Q4- Checking table metadata
+-- MAGIC #### Q3- Checking table metadata
 -- MAGIC
 -- MAGIC Review the extended metadata information of the table, and verify that:
 -- MAGIC 1. The table type is External
--- MAGIC 1. The table is located under the directory: **dbfs:/mnt/demo/actors_external**
+-- MAGIC 1. The table is located under the directory: **s3://&lt;BUCKET&gt;/external_storage/actors_external**
 
 -- COMMAND ----------
 
@@ -84,7 +96,7 @@ DESCRIBE EXTENDED actors_external
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC #### Q3- Dropping manged table
+-- MAGIC #### Q4- Dropping manged table
 -- MAGIC
 -- MAGIC Drop the manged table **movies_managed** 
 
@@ -101,7 +113,8 @@ DROP TABLE movies_managed
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/user/hive/warehouse/movies_managed'
+-- Note: It is not permitted to list the files of managed tables. You may examine the table files directly in your S3 bucket.
+--%fs ls '/path/to/movies_managed'
 
 -- COMMAND ----------
 
@@ -121,7 +134,7 @@ DROP TABLE actors_external
 
 -- COMMAND ----------
 
--- MAGIC %fs ls 'dbfs:/mnt/demo/actors_external'
+-- MAGIC %fs ls 's3://<BUCKET>/external_storage/actors_external'
 
 -- COMMAND ----------
 
@@ -139,24 +152,12 @@ CREATE SCHEMA db_cinema
 
 -- MAGIC %md
 -- MAGIC
--- MAGIC Review the extended metadata information of the database, and verify that the database is located under the default hive directory.
--- MAGIC
--- MAGIC Note that the database folder has the extenstion **.db**
-
--- COMMAND ----------
-
-DESCRIBE DATABASE EXTENDED db_cinema
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC
 -- MAGIC Use the new schema to create the below **movies** table
 
 -- COMMAND ----------
 
 -- Answer
-USE db_cinema;
+USE SCHEMA db_cinema;
 
 CREATE TABLE movies
   (title STRING, category STRING, length INT, release_date DATE);
@@ -166,13 +167,13 @@ CREATE TABLE movies
 -- MAGIC %md
 -- MAGIC #### Q6- Creating new schema in custom location
 -- MAGIC
--- MAGIC Create a new schema named **cinema_custom** in the directory: **dbfs:/Shared/schemas/cinema_custom.db**
+-- MAGIC Create a new schema named **cinema_custom** in the directory: **s3://&lt;BUCKET&gt;/custom_schemas**
 
 -- COMMAND ----------
 
 -- Answer
 CREATE SCHEMA cinema_custom
-LOCATION 'dbfs:/Shared/schemas/cinema_custom.db'
+LOCATION 's3://<BUCKET>/custom_schemas'
 
 -- COMMAND ----------
 

@@ -31,10 +31,11 @@ display(files)
 (spark.readStream
         .format("cloudFiles")
         .option("cloudFiles.format", "parquet")
-        .option("cloudFiles.schemaLocation", "dbfs:/mnt/demo/orders_checkpoint")
+        .option("cloudFiles.schemaLocation", f"{checkpoints_bookstore}/orders")
         .load(f"{dataset_bookstore}/orders-raw")
       .writeStream
-        .option("checkpointLocation", "dbfs:/mnt/demo/orders_checkpoint")
+        .trigger(availableNow=True) # we use trigger AvailableNow as Trigger type ProcessingTime is not supported for Serverless compute.
+        .option("checkpointLocation", f"{checkpoints_bookstore}/orders")
         .table("orders_updates")
 )
 
@@ -92,4 +93,4 @@ display(files)
 
 # COMMAND ----------
 
-dbutils.fs.rm("dbfs:/mnt/demo/orders_checkpoint", True)
+dbutils.fs.rm(f"{checkpoints_bookstore}/orders", True)
