@@ -138,4 +138,3 @@ def load_new_json_data(all=False):
 # COMMAND ----------
 
 download_dataset(data_source_uri, dataset_bookstore)
-set_current_catalog(data_catalog)
