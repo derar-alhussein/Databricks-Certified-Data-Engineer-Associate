@@ -66,6 +66,11 @@ display(new_customers_df)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ## Exploratory Data Analysis
+
+# COMMAND ----------
+
 orders_df = spark.table("orders")
 
 display(orders_df.describe())
@@ -73,6 +78,11 @@ display(orders_df.describe())
 # COMMAND ----------
 
 display(orders_df.summary())
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Data Deduplication
 
 # COMMAND ----------
 
@@ -84,6 +94,11 @@ display(deduped_df)
 
 deduped_df = orders_df.dropDuplicates(["customer_id"])
 display(deduped_df)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Null Handling
 
 # COMMAND ----------
 
@@ -104,6 +119,11 @@ display(clean_df)
 #clean_df = customers_df.na.drop()
 clean_df = customers_df.dropna()
 display(clean_df)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Join Strategies
 
 # COMMAND ----------
 
@@ -146,15 +166,20 @@ display(orders_details_df)
 
 # COMMAND ----------
 
-spark.conf.get("spark.sql.autoBroadcastJoinThreshold")
+#spark.conf.get("spark.sql.autoBroadcastJoinThreshold")
 
 # COMMAND ----------
 
-spark.conf.set("spark.sql.autoBroadcastJoinThreshold", 20 * 1024 * 1024)
+#spark.conf.set("spark.sql.autoBroadcastJoinThreshold", 20 * 1024 * 1024)
 
 # COMMAND ----------
 
-spark.conf.get("spark.sql.autoBroadcastJoinThreshold")
+#spark.conf.get("spark.sql.autoBroadcastJoinThreshold")
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Querying Data
 
 # COMMAND ----------
 
