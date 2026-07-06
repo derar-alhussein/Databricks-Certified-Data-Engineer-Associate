@@ -9,3 +9,4 @@ load_new_json_data()
 
 # MAGIC %sql
 # MAGIC SELECT * from json.`${dataset.bookstore}/books-cdc/02.json`
+
