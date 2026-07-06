@@ -1,5 +1,7 @@
 CREATE OR REFRESH STREAMING TABLE orders_cleaned (
-  CONSTRAINT valid_order_number EXPECT (order_id IS NOT NULL) ON VIOLATION DROP ROW
+  CONSTRAINT positive_quantity  EXPECT (quantity > 0) ON VIOLATION DROP ROW,
+  CONSTRAINT valid_customer EXPECT (f_name IS NOT NULL AND l_name IS NOT NULL) ON VIOLATION FAIL UPDATE,
+  CONSTRAINT recent_order EXPECT (order_timestamp >= "2022-07-15")
 )
 COMMENT "The cleaned books orders with valid order_id"
 AS
@@ -8,4 +10,4 @@ AS
          c.profile:address:country as country
   FROM STREAM orders_raw o
   LEFT JOIN customers c
-    ON o.customer_id = c.customer_id
+  ON o.customer_id = c.customer_id;
