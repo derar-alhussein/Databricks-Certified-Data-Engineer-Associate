@@ -8,7 +8,8 @@
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ## Querying JSON 
+-- MAGIC ## Querying JSON Files
+-- MAGIC
 
 -- COMMAND ----------
 
