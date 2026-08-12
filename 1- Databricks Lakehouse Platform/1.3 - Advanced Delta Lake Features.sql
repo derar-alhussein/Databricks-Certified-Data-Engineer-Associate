@@ -87,27 +87,13 @@ ALTER TABLE employees SET TBLPROPERTIES ('delta.deletedFileRetentionDuration'='i
 
 -- COMMAND ----------
 
-VACUUM employees RETAIN 0 HOURS
+VACUUM employees
+
+-- COMMAND ----------
+
+ALTER TABLE employees SET TBLPROPERTIES ('delta.deletedFileRetentionDuration'='interval 168 hours')
 
 -- COMMAND ----------
 
 -- Note: You may still see results due to a cached version of the table in the serverless compute environment
 SELECT * FROM employees@v1
-
--- COMMAND ----------
-
--- MAGIC %md
--- MAGIC
--- MAGIC ## Dropping Tables
-
--- COMMAND ----------
-
-DROP TABLE employees
-
--- COMMAND ----------
-
-SELECT * FROM employees
-
--- COMMAND ----------
-
---UNDROP TABLE employees
