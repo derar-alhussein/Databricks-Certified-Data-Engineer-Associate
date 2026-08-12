@@ -83,10 +83,6 @@ CREATE SCHEMA new_default
 
 -- COMMAND ----------
 
-DESCRIBE DATABASE EXTENDED new_default
-
--- COMMAND ----------
-
 USE SCHEMA new_default;
 
 CREATE TABLE managed_new_default
