@@ -1,9 +1,18 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md-sandbox
 # MAGIC
 # MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
 # MAGIC   <img src="https://raw.githubusercontent.com/derar-alhussein/Databricks-Certified-Data-Engineer-Associate/main/Includes/images/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 # MAGIC </div>
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Important:** Please use Classic Compute, instead of Serverless Compute, to ensure full Structured Streaming compatibility.
 
 # COMMAND ----------
 

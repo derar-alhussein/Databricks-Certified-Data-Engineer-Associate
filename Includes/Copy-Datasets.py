@@ -57,6 +57,11 @@ else:
     spark.sql(f"CREATE VOLUME IF NOT EXISTS {dataset_volume_name}")
     spark.sql(f"CREATE VOLUME IF NOT EXISTS {checkpoints_volume_name}")
 
+    try:
+        spark.conf.set("spark.sql.streaming.checkpointLocation", f"{checkpoints_bookstore}/tmp")
+    except:
+        pass
+
 try:
     spark.conf.set(f"dataset.bookstore", dataset_bookstore)
     spark.conf.set("fs.s3a.endpoint", "s3.eu-west-3.amazonaws.com")

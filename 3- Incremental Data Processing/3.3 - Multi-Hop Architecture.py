@@ -1,9 +1,18 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "6"
+# ///
 # MAGIC %md-sandbox
 # MAGIC
 # MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
 # MAGIC   <img src="https://raw.githubusercontent.com/derar-alhussein/Databricks-Certified-Data-Engineer-Associate/main/Includes/images/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 # MAGIC </div>
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Important:** Please use Classic Compute, instead of Serverless Compute, to ensure full Structured Streaming compatibility.
 
 # COMMAND ----------
 
@@ -13,7 +22,7 @@
 
 # MAGIC %md
 # MAGIC
-# MAGIC ## Exploring The Source dDirectory
+# MAGIC ## Exploring The Source Directory
 
 # COMMAND ----------
 
@@ -51,8 +60,8 @@ display(files)
 
 # COMMAND ----------
 
-orders_tmp_df = spark.sql("SELECT * FROM orders_tmp")
-display(orders_tmp_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/orders_{time.time()}")
+# MAGIC %sql
+# MAGIC SELECT * FROM orders_tmp
 
 # COMMAND ----------
 

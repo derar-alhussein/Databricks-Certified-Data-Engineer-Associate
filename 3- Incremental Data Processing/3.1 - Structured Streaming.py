@@ -1,9 +1,18 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "5"
+# ///
 # MAGIC %md-sandbox
 # MAGIC
 # MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
 # MAGIC   <img src="https://raw.githubusercontent.com/derar-alhussein/Databricks-Certified-Data-Engineer-Associate/main/Includes/images/bookstore_schema.png" alt="Databricks Learning" style="width: 600">
 # MAGIC </div>
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **Important:** Please use Classic Compute, instead of Serverless Compute, to ensure full Structured Streaming compatibility.
 
 # COMMAND ----------
 
@@ -30,8 +39,8 @@
 
 # COMMAND ----------
 
-books_streaming_df = spark.sql("SELECT * FROM books_streaming_tmp_vw")
-display(books_streaming_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/books_streaming_{time.time()}")
+# MAGIC %sql
+# MAGIC SELECT * FROM books_streaming_tmp_vw
 
 # COMMAND ----------
 
@@ -40,10 +49,10 @@ display(books_streaming_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/b
 
 # COMMAND ----------
 
-author_counts_df = spark.sql("""SELECT author, count(book_id) AS total_books
-                                  FROM books_streaming_tmp_vw
-                                  GROUP BY author""")
-display(author_counts_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/author_counts_{time.time()}")
+# MAGIC %sql
+# MAGIC SELECT author, count(book_id) AS total_books
+# MAGIC FROM books_streaming_tmp_vw
+# MAGIC GROUP BY author
 
 # COMMAND ----------
 
@@ -53,14 +62,10 @@ display(author_counts_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/aut
 
 # COMMAND ----------
 
-sorted_books_df = books_streaming_df.orderBy("author")
-
-(sorted_books_df.writeStream
-                .option("checkpointLocation", f"{checkpoints_bookstore}/sorted_books")
-                .trigger(availableNow=True)
-                .format("console")
-                .start()
-)
+# MAGIC %sql
+# MAGIC SELECT * 
+# MAGIC FROM books_streaming_tmp_vw
+# MAGIC ORDER BY author
 
 # COMMAND ----------
 
