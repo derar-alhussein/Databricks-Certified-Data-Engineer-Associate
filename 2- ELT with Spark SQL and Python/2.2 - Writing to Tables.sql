@@ -48,8 +48,8 @@ DESCRIBE HISTORY orders
 
 -- COMMAND ----------
 
-INSERT OVERWRITE orders
-SELECT *, current_timestamp() FROM parquet.`${dataset_bookstore}/orders`
+--INSERT OVERWRITE orders
+--SELECT *, current_timestamp() FROM parquet.`${dataset_bookstore}/orders`
 
 -- COMMAND ----------
 
@@ -100,7 +100,3 @@ USING books_updates u
 ON b.book_id = u.book_id AND b.title = u.title
 WHEN NOT MATCHED AND u.category = 'Computer Science' THEN 
   INSERT *
-
--- COMMAND ----------
-
-

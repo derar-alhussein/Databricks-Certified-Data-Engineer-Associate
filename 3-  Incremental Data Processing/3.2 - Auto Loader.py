@@ -66,6 +66,11 @@ display(files)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC **TO DO:** Re-run the above streaming query to process the newly added files.
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC SELECT count(*) FROM orders_updates
 
