@@ -51,11 +51,6 @@ display(files)
 
 # COMMAND ----------
 
-orders_tmp_df = spark.sql("SELECT * FROM orders_tmp")
-display(orders_tmp_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/orders_{time.time()}")
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC ## Creating Bronze Table
 

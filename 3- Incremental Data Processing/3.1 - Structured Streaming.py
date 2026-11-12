@@ -1,4 +1,8 @@
 # Databricks notebook source
+# /// script
+# [tool.databricks.environment]
+# environment_version = "2"
+# ///
 # MAGIC %md-sandbox
 # MAGIC
 # MAGIC <div  style="text-align: center; line-height: 0; padding-top: 9px;">
@@ -26,34 +30,11 @@
 
 # MAGIC %md
 # MAGIC
-# MAGIC ## Displaying Streaming Data
-
-# COMMAND ----------
-
-books_streaming_df = spark.sql("SELECT * FROM books_streaming_tmp_vw")
-display(books_streaming_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/books_streaming_{time.time()}")
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## Applying Transformations
-
-# COMMAND ----------
-
-author_counts_df = spark.sql("""SELECT author, count(book_id) AS total_books
-                                  FROM books_streaming_tmp_vw
-                                  GROUP BY author""")
-display(author_counts_df, checkpointLocation = f"{checkpoints_bookstore}/tmp/author_counts_{time.time()}")
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC
 # MAGIC ## Unsupported Operations
 
 # COMMAND ----------
 
-sorted_books_df = books_streaming_df.orderBy("author")
+sorted_books_df = spark.table("books_streaming_tmp_vw").orderBy("author")
 
 (sorted_books_df.writeStream
                 .option("checkpointLocation", f"{checkpoints_bookstore}/sorted_books")
@@ -65,8 +46,7 @@ sorted_books_df = books_streaming_df.orderBy("author")
 # COMMAND ----------
 
 # MAGIC %md
-# MAGIC
-# MAGIC ## Persisting Streaming Data
+# MAGIC ## Applying Transformations
 
 # COMMAND ----------
 
@@ -79,24 +59,32 @@ sorted_books_df = books_streaming_df.orderBy("author")
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC ## Persisting Streaming Data
+
+# COMMAND ----------
+
 # Trigger type ProcessingTime is not supported for Serverless compute.
-# (See: https://docs.databricks.com/aws/en/compute/serverless/limitations#streaming-limitations)
-# Recommended Solution: Use Delta Live Tables (DLT) pipelines (Lecture 31) with Continuous mode.
+# (See Streaming Limitations: https://docs.databricks.com/aws/en/compute/serverless/limitations#streaming-limitations)
+# Recommended Solution: Use Lakeflow Spark Declarative pipelines in Continuous mode.
+
 # Alternative Workaround: use trigger AvailableNow
 
-#(spark.table("author_counts_tmp_vw")                               
-#      .writeStream  
-#      .trigger(processingTime='4 seconds')
-#      .outputMode("complete")
-#      .option("checkpointLocation", f"{checkpoints_bookstore}/author_counts")
-#      .table("author_counts")
-#)
+(spark.table("author_counts_tmp_vw")                               
+      .writeStream  
+      #.trigger(processingTime='4 seconds')
+      .trigger(availableNow=True)
+      .outputMode("complete")
+      .option("checkpointLocation", f"{checkpoints_bookstore}/author_counts")
+      .table("author_counts")
+)
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC --SELECT *
-# MAGIC --FROM author_counts
+# MAGIC SELECT *
+# MAGIC FROM author_counts
 
 # COMMAND ----------
 
@@ -110,6 +98,11 @@ sorted_books_df = books_streaming_df.orderBy("author")
 # MAGIC values ("B19", "Introduction to Modeling and Simulation", "Mark W. Spong", "Computer Science", 25),
 # MAGIC         ("B20", "Robot Modeling and Control", "Mark W. Spong", "Computer Science", 30),
 # MAGIC         ("B21", "Turing's Vision: The Birth of Computer Science", "Chris Bernhardt", "Computer Science", 35)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC **TO DO:** Re-run the above streaming query to process the new data.
 
 # COMMAND ----------
 
